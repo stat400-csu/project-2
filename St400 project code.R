@@ -73,7 +73,7 @@ m_z = 0.3
 b_z = 0.5
 
 
-
+###### loop tro get fertility age bins
 fertility_ratio = eighty2/x0
 
 fertility_age_bins = rep(NA,length(fertility_ratio))
@@ -261,7 +261,7 @@ b_im_quin = 3.75
 
 Net_IM_age_bins = rep(NA,length(Immigration_age_bins))
 
-
+#### loop to create new immigration age bins
 
 
 for (i in 1:length(Immigration_age_bins)) {
@@ -549,13 +549,18 @@ leslie_fxn(1982)
 
 
 
-
+#################setting up the monte carlo simulation #######
 
 
 
 # last year of projections.
-end_year = 80
-sim_num = 10
+end_year = 40
+sim_num = 30
+
+
+
+
+
 
 #### populations for the current year
 
@@ -568,11 +573,69 @@ Pop_i = rep(NA,end_year)
 Pop_i[1] = sum(Pop0)
 
 
+
+
+
+
+
+
 # multiple current populations for the year are saved and will
 #be averaged to make the monte carlo
 #so pop j is the next iteration of population
 # after saving pop j we go to the next iteration
 Pop_j = rep(NA,sim_num)
+
+Pop_j[1] = sum(Pop0)
+
+
+Monte_carlo_pop = rep(NA,end_year)
+
+
+#Monte carlo age bins
+# The sum of this with fertility added in to the firsr
+# vector row = population
+Monte_carlo_age_bins_list= list()
+
+# first year is always 1982 Pop 0 is 1982's age bins with feretility
+# it has to be subb setted by removing the fertility
+
+
+Monte_carlo_age_bins_list[[1]] =  Pop0[2:22]
+
+#add in the 1982 births
+Monte_carlo_age_bins_list[[1]][1] = Monte_carlo_age_bins_list[[1]][1]+
+                                    Pop0[1]
+
+# added increase the population. Its the fertility 
+# we will add this to the 0-5 age bin
+
+added_monte_carlo = rep(NA,sim_num)
+
+# innitially nothing is added
+added_monte_carlo[1] =0
+
+
+## Immigration for monte carlo
+Imm_monte_list = list()
+
+# first year has to use 1982's  immigration in order to make
+# the ratio multiplier
+
+Imm_monte_list[[1]] = NI_i
+
+
+
+## Leslie matrix use 1982s for first year because we need the
+# original ratio multiplier
+
+Leslie_Monte_list = list()
+
+# 1982 s leslie matrix to make 1983's
+ 
+Leslie_Monte_list[[1]] =  LeslieMatrix
+
+
+
 
 ### iterative population age bins and fertility rate 
 Ni_t_list = list()
@@ -596,7 +659,7 @@ leslie_list = list()
 
 leslie_list[[1]] = LeslieMatrix
 
-deaths = rep(NA, end_year)
+deaths = rep(NA, sim_num)
 
 added = rep(NA,end_year)
 
@@ -604,101 +667,260 @@ current_pop_list = list()
 
 Immigrate_added = rep(NA,end_year)
 
+
+########## begginning of loop ######
+
 # starting in 1983 using each previous years data to update 
 #the current years projections
-for (j  in 1:sim_num) {
+for (i  in 2:end_year) {
+  # after monte carlo we collect the mean  from the population to get 
+  # the 1983 monte carlo  population and all next years afterwards
   
-}
-for(i in 2:end_year) {
   
-  # population age bins for the previous year
-  Ni_t = Ni_t_list[[i-1]]
+  # container to hold monte carlo age bins
+  # we get the mean later on 
+  
+  Pop_bin_sums = matrix(0,nrow =21 , ncol = 1)
+  
+
+  
+  
+
+for(j in 2:sim_num) {
+  
+  
+  
+  
+  # Starting with the previous years monte carlo age bins
+  # initialy 1982
+  # we will keep age bins the same 
+#calculating 1983_aLeslie * 1983_aPopulation_bins +1983_aImmigration
+ # then we do 1983_bLeslie * 1983_bPopulation_bins +1983_bImmigration
+# where 1983bLeslie is randomly drawn and  1983bPopulation_bins 
+ # is the same and 1983b immigration is randomly drawn
+   
+
+ # 1982 population age bins to make 1983_aPopulation which is also 1983b.. 
+  #and so  on since population age bins won't change
+  Monte_Nt = Monte_carlo_age_bins_list[[j-1]]
+  
+  # add each new population age bin
+  
+  
  
   
-  #  previous year net immigration
-  NI_t = NI_t_list[[i-1]]
+   #1982 immigration bins to make 1983a_ immigration
+  # 1983 immigrationbins_b will be draw randomly after saving 
+  # populationa
+  Monte_NI_t = Imm_monte_list[[j-1]]
+  
+  
+  #1982 Leslie to make 1983Lesliea 
+  # 1983 Leslie_b will be draw randomly after saving 
+  # populationa
+   Monte_matrix =   Leslie_Monte_list[[j-1]]
+  
+#calculating 1983_aLeslie * 1983_aPopulation_bins +1983_aImmigration
+# then we do 1983_bLeslie * 1983_bPopulation_bins +1983_bImmigration
+# result is a vector that is 22*1 because the first elemnt is total
+#births .So it needs to be subb setted back to a 21x1 but total
+# births won't be added because the age_bins must stay the same
+   
+  
+   
+   Monte_current_age = Monte_matrix %*% (Monte_Nt+ Monte_NI_t)
+   
+ 
+   #shrink it by subsetting back to 21X1  so 22X21 * 21X1
+   # saves the current years age bins and it will stay the same
+   #for the next j(simulation) iterations but needs deaths added
+   #back
+   #1983_populationbinsa
+   
+   Monte_carlo_age_bins_list[[j]] = Monte_current_age[2:22]
+   
+   
+  
+   
+   
+   
+   
+   # To make it stay the same deaths have to be added back in to
+   #population
+   # previous deaths are deaths per bin so they need to be summed
+   # to get total deaths then added back to pop aage bins
+   prev_deaths = abs(Monte_carlo_age_bins_list[[j]]-
+                    Monte_carlo_age_bins_list[[j-1]])
+   
+   deaths[j] = sum(prev_deaths)
+   
+   
+   
+   Monte_carlo_age_bins_list[[j]] = Monte_Nt+prev_deaths
+   
+   Pop_bin_sums = Pop_bin_sums + Monte_carlo_age_bins_list[[j]]
+   
+   
+   
+   
+   # sum the current year age bins to get current year population
+   # save j populations, we called  j :sim_num
+   # get the mean after everything is saved 
+   #this will become 1983 populationb
+   
+   
+   
+   # subtract the first immigration
+   Pop_j[j] = sum(Monte_carlo_age_bins_list[[j]])-
+     sum(Imm_monte_list[[j-1]])
+   
+   
+   
+  
+   # change leslie for the next iteration randomly
+   # leslie changes the birthrates randomly
+   # 1983 leslie b . So we went from a-b
+   
+   Leslie_Monte_list[[j]] = leslie_fxn(j)
+   
+   # change immigration for the next iteration randomly
+   # 1983 immigration b . So we went from a-b
+   Imm_monte_list[[j]] = imm_fxn(j)*1000000
+   
+ 
+}
+  
+  ######## end on inner loop###
   
   
   
-  ### current year leslie matricies
+  
+  # get the mean population age bins which is the average
+  # of popbin_sums
+  # so then this is 1982's age bins
+  mean_age_bins = rowMeans(Pop_bin_sums)
+  
+  # collect each monte carlo population
+  
+   Monte_carlo_pop[i] = sum(mean_age_bins)
+   
+   
+   Pop_i[i] = mean(Pop_j)
+   
+   
+    
+   Ni_t = Ni_t_list[[i-1]]
+   
+   #previous immigration
+   
+   NI_t =NI_t_list[[i-1]]
+   
+   
+   ### current year leslie matricies
    prev_matrix =     leslie_list[[i-1]]
-  
-     ### Lesliematrix * population age bins + net immigration =
-  ### The current years population age bins with fertility
-  
-  current_pop_bins_with_fertilty <- prev_matrix%*%Ni_t+ NI_t
-  current_pop_list[[i-1]] = current_pop_bins_with_fertilty
-  
-  #people added current year 1
-  added[i-1] = current_pop_bins_with_fertilty[1]
-  
-  
-  
-  #population age bins for the current year
-  Ni_t_list[[i]] = current_pop_bins_with_fertilty[2:22]
-  
-  # add babies to the 0-5 bin
-  Ni_t_list[[i]][1] = Ni_t_list[[i]] [1]+ added[i-1]
-  
-  
-  ##### population = the sum of the current years age bins
-  Pop_i[i] <- sum(current_pop_bins_with_fertilty)
-  
-  
-  deaths[i-1] = sum(Pop_i[i])- sum(Ni_t_list[[i-1]]) 
-  
+   
+   ### Lesliematrix * population age bins + net immigration =
+   ### The current years population age bins with fertility
+   
+   current_pop_bins_with_fertilty <- prev_matrix%*% (Ni_t+ NI_t)
+   current_pop_list[[i-1]] = current_pop_bins_with_fertilty
+   
+   #people added current year 1
+   added[i-1] = current_pop_bins_with_fertilty[1]
+   
+   
+   
+   #population age bins for the current year
+   Ni_t_list[[i]] = current_pop_bins_with_fertilty[2:22]
+   
+   # add babies to the 0-5 bin
+   Ni_t_list[[i]][1] = Ni_t_list[[i]][1]+ added[i-1]
+   
+   
+   ##### population = the sum of the current years age bins
+   #with fertility
+   
+   #change inside population and population age bins
+   Pop_j[1] = sum(current_pop_bins_with_fertilty)
+   
+   Monte_carlo_age_bins_list[[1]] = Ni_t_list[[i]]
  
- 
-  
-  #  current year net immigration age bins 
-  
-  current_immigration =imm_fxn(i)*1000000
-  
-  NI_t_list[[i]] = current_immigration
-  
- 
-  
-  ### current year leslie matricies and birthrate is also updated
-  #randomly
-  leslie_list[[i]] = leslie_fxn(i)
-  
-}
+   leslie_list[[i]] = leslie_fxn(i)
+   
+   # change immigration for the next iteration randomly
+   # 1983 immigration b . So we went from a-b
+   NI_t_list[[i]] = imm_fxn(i)*1000000
+   
+   
 
-# end of inner loop
-
-# collecting all of the populations before going to the next year 
-# and getting the mean
-# pop j is cxomposed of multiple pop i's 
-
-
-Pop_j[j] = mean(Pop_i)
 
 }
 
 #end of outer loop
-Pop_i
+# previous years age bins
+
+
+
+
+
+
+
+
+#  current year net immigration age bins 
+current_immigration =imm_fxn(i)*1000000
+NI_t_list[[i]] = current_immigration
+
+### current year leslie matricies and birthrate is also updated
+#randomly
+leslie_list[[i]] = leslie_fxn(i)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# get 1983 or what ever is the current years leslie matrix randomly
+# so that its ready for the next iteration meaning 1983-1984
+#Leslie_Monte_list[[j]] = leslie_fxn(j)
+
+# get 1983 or what ever is the current years immigration randomly
+# so that its ready for the next iteration meaning 1983-1984
+#Imm_monte_list[[j]] =  imm_fxn(j)*1000000
+
+# deaths[j-1] = sum(Pop_j[j])- sum(Monte_carlo_age_bins_list[[j-1]]) 
+
+
+
+
+
+
+
+
+
+# That mean gets saved into Popi
+# popi saves our population projections
+
+#Pop_i[i] <- mean(Pop_j)
+
+
+
+# end of inner loop
+
+
+
 
 # monte carlo population mean of  current populations list  
-monte_carlo_pop = mean(Pop_i)
-
-deaths
-
-added
-
-NI_t_list
-
-Ni_t_list
-
-#current_pop_list
-
-
-Immigrate_added
-
-NI_t
+#monte_carlo_pop = mean(Pop_i)
 
 
 
-Ni_t
-leslie_list[[3]]
 
-Ni_t_list
