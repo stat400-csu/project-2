@@ -634,7 +634,10 @@ Leslie_Monte_list = list()
  
 Leslie_Monte_list[[1]] =  LeslieMatrix
 
-
+#Save simulations in a simlength x end year long matrix
+#[,j] subsets rows [i,](up and down) subsets columns(left and right)
+# [same row number,j] lets you add values left to right in the same row
+sim_matrix = matrix(0,sim_num,end_year)
 
 
 ### iterative population age bins and fertility rate 
@@ -671,8 +674,69 @@ Immigrate_added = rep(NA,end_year)
 ########## begginning of loop ######
 
 # starting in 1983 using each previous years data to update 
-#the current years projections
-for (i  in 2:end_year) {
+#the current years projections. We each set of projections in a single
+# row of a matrix with dimenions simnumX endyear. 
+# So rows will be endyear long
+# we will simulate 1000s of these projections so the number of
+#columns is sim num long
+
+
+for (i in 1:sim_num) {
+  # saves a new set of projections(rows)
+  for (j in 2:end_year) {
+    # j starts at 2 because we need to do j-1 
+    #to get the previous year erach time
+    # saves a new year into a projection set(columns) 
+    
+    # start with 1982's populatioon age bins vector
+    Ni_t =   Ni_t_list[[j-1]]
+    
+    #Start with 1982's leslie matrix
+    leslie = leslie_list[[j-1]]
+    
+    #start with 1982's net immigration age bins vector
+    
+    NI_t = NI_t_list[[j-1]]
+    
+    #Get the 22x1 current population bins vector with births
+    
+    Ni_t1_with_births = leslie %*% Ni_t +NI_t
+    
+    # save births
+    added[j-1] = Ni_t1_with_births[1]
+    
+    #remove the births column of the matrix but add the number
+    # of births into the 0-5 age bin
+    
+     Ni_t1 = Ni_t1_with_births[2:22]
+     
+     Ni_t1[1] = Ni_t1[1]+ added[j-1]
+     
+     #save the new age bins into the age bins list
+     
+     Ni_t_list[[j]] = Ni_t1
+     
+     #save the population into a column(j) in a single projection row(i)
+     
+     sim_matrix[i,j] = sum(Ni_t1)
+     
+     # update fertility and immigration randomly/stochasticly
+     
+     leslie_list[[j]] = leslie_fxn(j)
+     
+     NI_t_list[[j]] = imm_fxn(j) * 1000000
+    
+  }
+}
+
+
+
+
+
+
+
+
+#for (i  in 2:end_year) {
   # after monte carlo we collect the mean  from the population to get 
   # the 1983 monte carlo  population and all next years afterwards
   
@@ -680,13 +744,13 @@ for (i  in 2:end_year) {
   # container to hold monte carlo age bins
   # we get the mean later on 
   
-  Pop_bin_sums = matrix(0,nrow =21 , ncol = 1)
+ # Pop_bin_sums = matrix(0,nrow =21 , ncol = 1)
   
 
   
   
 
-for(j in 2:sim_num) {
+#for(j in 2:sim_num) {
   
   
   
@@ -702,7 +766,7 @@ for(j in 2:sim_num) {
 
  # 1982 population age bins to make 1983_aPopulation which is also 1983b.. 
   #and so  on since population age bins won't change
-  Monte_Nt = Monte_carlo_age_bins_list[[j-1]]
+ # Monte_Nt = Monte_carlo_age_bins_list[[j-1]]
   
   # add each new population age bin
   
@@ -712,13 +776,13 @@ for(j in 2:sim_num) {
    #1982 immigration bins to make 1983a_ immigration
   # 1983 immigrationbins_b will be draw randomly after saving 
   # populationa
-  Monte_NI_t = Imm_monte_list[[j-1]]
+#  Monte_NI_t = Imm_monte_list[[j-1]]
   
   
   #1982 Leslie to make 1983Lesliea 
   # 1983 Leslie_b will be draw randomly after saving 
   # populationa
-   Monte_matrix =   Leslie_Monte_list[[j-1]]
+ #  Monte_matrix =   Leslie_Monte_list[[j-1]]
   
 #calculating 1983_aLeslie * 1983_aPopulation_bins +1983_aImmigration
 # then we do 1983_bLeslie * 1983_bPopulation_bins +1983_bImmigration
@@ -728,7 +792,7 @@ for(j in 2:sim_num) {
    
   
    
-   Monte_current_age = Monte_matrix %*% (Monte_Nt+ Monte_NI_t)
+#   Monte_current_age = Monte_matrix %*% (Monte_Nt+ Monte_NI_t)
    
  
    #shrink it by subsetting back to 21X1  so 22X21 * 21X1
@@ -737,7 +801,7 @@ for(j in 2:sim_num) {
    #back
    #1983_populationbinsa
    
-   Monte_carlo_age_bins_list[[j]] = Monte_current_age[2:22]
+ #  Monte_carlo_age_bins_list[[j]] = Monte_current_age[2:22]
    
    
   
@@ -749,16 +813,16 @@ for(j in 2:sim_num) {
    #population
    # previous deaths are deaths per bin so they need to be summed
    # to get total deaths then added back to pop aage bins
-   prev_deaths = abs(Monte_carlo_age_bins_list[[j]]-
-                    Monte_carlo_age_bins_list[[j-1]])
+ #  prev_deaths = abs(Monte_carlo_age_bins_list[[j]]-
+ #                   Monte_carlo_age_bins_list[[j-1]])
    
-   deaths[j] = sum(prev_deaths)
+ #  deaths[j] = sum(prev_deaths)
    
    
    
-   Monte_carlo_age_bins_list[[j]] = Monte_Nt+prev_deaths
+ #  Monte_carlo_age_bins_list[[j]] = Monte_Nt+prev_deaths
    
-   Pop_bin_sums = Pop_bin_sums + Monte_carlo_age_bins_list[[j]]
+#   Pop_bin_sums = Pop_bin_sums + Monte_carlo_age_bins_list[[j]]
    
    
    
@@ -771,8 +835,8 @@ for(j in 2:sim_num) {
    
    
    # subtract the first immigration
-   Pop_j[j] = sum(Monte_carlo_age_bins_list[[j]])-
-     sum(Imm_monte_list[[j-1]])
+#   Pop_j[j] = sum(Monte_carlo_age_bins_list[[j]])-
+#     sum(Imm_monte_list[[j-1]])
    
    
    
@@ -781,14 +845,14 @@ for(j in 2:sim_num) {
    # leslie changes the birthrates randomly
    # 1983 leslie b . So we went from a-b
    
-   Leslie_Monte_list[[j]] = leslie_fxn(j)
+#   Leslie_Monte_list[[j]] = leslie_fxn(j)
    
    # change immigration for the next iteration randomly
    # 1983 immigration b . So we went from a-b
-   Imm_monte_list[[j]] = imm_fxn(j)*1000000
+#   Imm_monte_list[[j]] = imm_fxn(j)*1000000
    
  
-}
+#}
   
   ######## end on inner loop###
   
@@ -798,63 +862,63 @@ for(j in 2:sim_num) {
   # get the mean population age bins which is the average
   # of popbin_sums
   # so then this is 1982's age bins
-  mean_age_bins = rowMeans(Pop_bin_sums)
+#  mean_age_bins = rowMeans(Pop_bin_sums)
   
   # collect each monte carlo population
   
-   Monte_carlo_pop[i] = sum(mean_age_bins)
+ #  Monte_carlo_pop[i] = sum(mean_age_bins)
    
    
-   Pop_i[i] = mean(Pop_j)
+#   Pop_i[i] = mean(Pop_j)
    
    
     
-   Ni_t = Ni_t_list[[i-1]]
+#   Ni_t = Ni_t_list[[i-1]]
    
    #previous immigration
    
-   NI_t =NI_t_list[[i-1]]
+#   NI_t =NI_t_list[[i-1]]
    
    
    ### current year leslie matricies
-   prev_matrix =     leslie_list[[i-1]]
+#   prev_matrix =     leslie_list[[i-1]]
    
    ### Lesliematrix * population age bins + net immigration =
    ### The current years population age bins with fertility
    
-   current_pop_bins_with_fertilty <- prev_matrix%*% (Ni_t+ NI_t)
-   current_pop_list[[i-1]] = current_pop_bins_with_fertilty
+#   current_pop_bins_with_fertilty <- prev_matrix%*% (Ni_t+ NI_t)
+#   current_pop_list[[i-1]] = current_pop_bins_with_fertilty
    
    #people added current year 1
-   added[i-1] = current_pop_bins_with_fertilty[1]
+#   added[i-1] = current_pop_bins_with_fertilty[1]
    
    
    
    #population age bins for the current year
-   Ni_t_list[[i]] = current_pop_bins_with_fertilty[2:22]
+  # Ni_t_list[[i]] = current_pop_bins_with_fertilty[2:22]
    
    # add babies to the 0-5 bin
-   Ni_t_list[[i]][1] = Ni_t_list[[i]][1]+ added[i-1]
+ #  Ni_t_list[[i]][1] = Ni_t_list[[i]][1]+ added[i-1]
    
    
    ##### population = the sum of the current years age bins
    #with fertility
    
    #change inside population and population age bins
-   Pop_j[1] = sum(current_pop_bins_with_fertilty)
+#   Pop_j[1] = sum(current_pop_bins_with_fertilty)
    
-   Monte_carlo_age_bins_list[[1]] = Ni_t_list[[i]]
+#   Monte_carlo_age_bins_list[[1]] = Ni_t_list[[i]]
  
-   leslie_list[[i]] = leslie_fxn(i)
+ #  leslie_list[[i]] = leslie_fxn(i)
    
    # change immigration for the next iteration randomly
    # 1983 immigration b . So we went from a-b
-   NI_t_list[[i]] = imm_fxn(i)*1000000
+#   NI_t_list[[i]] = imm_fxn(i)*1000000
    
    
 
 
-}
+#}
 
 #end of outer loop
 # previous years age bins
@@ -867,12 +931,12 @@ for(j in 2:sim_num) {
 
 
 #  current year net immigration age bins 
-current_immigration =imm_fxn(i)*1000000
-NI_t_list[[i]] = current_immigration
+#current_immigration =imm_fxn(i)*1000000
+#NI_t_list[[i]] = current_immigration
 
 ### current year leslie matricies and birthrate is also updated
 #randomly
-leslie_list[[i]] = leslie_fxn(i)
+#leslie_list[[i]] = leslie_fxn(i)
 
 
 
