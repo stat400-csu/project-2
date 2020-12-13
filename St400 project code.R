@@ -1,5 +1,38 @@
 
 
+##########Draw Function #########
+
+draw = function(a,b,m){
+  
+  
+  
+  # if invt > m , then use the m-t transform
+  
+  #a-t transform
+  u = runif(1)
+  
+  inv_t = 2*u*(-a+m)+a
+  
+  x1 = inv_t
+  
+  # if invt > m , then use the m-t transform
+  
+  if(inv_t>m){
+    
+    u = runif(1)
+    
+    inv_t = u*(2*(b-m))+m
+    
+    x1 = inv_t
+  }
+  
+  
+  return (x1)
+}
+
+
+
+
 ###########The first population births
 
 # fertility rates for 1982 in thousands
@@ -193,33 +226,7 @@ birth_fxn(1987)
 
 # inverse transform probability density function sampling: draw function
 
-draw = function(a,b,m){
-  
-  
-  
-  # if invt > m , then use the m-t transform
-  
-  #a-t transform
-  u = runif(1)
-  
-  inv_t = 2*u*(-a+m)+a
-  
-  x1 = inv_t
-  
-  # if invt > m , then use the m-t transform
-  
-  if(inv_t>m){
-    
-    u = runif(1)
-    
-    inv_t = u*(2*(b-m))+m
-    
-    x1 = inv_t
-  }
-  
-  
-  return (x1)
-}
+
 
 
 
@@ -554,10 +561,10 @@ leslie_fxn(1982)
 
 
 # last year of projections.
-end_year = 40
-sim_num = 30
-
-
+end_year = 98
+sim_num = 100
+sim_num2 = 1000
+sim_num3 = 10000
 
 
 
@@ -565,12 +572,12 @@ sim_num = 30
 #### populations for the current year
 
 
-Pop_i = rep(NA,end_year)
+#Pop_i = rep(NA,end_year)
 
 ## need the first previous year 1982 to calculate future years 
 #iteratively for 1983 and we want 10 or 1000 1983's 
 
-Pop_i[1] = sum(Pop0)
+#Pop_i[1] = sum(Pop0)
 
 
 
@@ -583,45 +590,45 @@ Pop_i[1] = sum(Pop0)
 #be averaged to make the monte carlo
 #so pop j is the next iteration of population
 # after saving pop j we go to the next iteration
-Pop_j = rep(NA,sim_num)
+#Pop_j = rep(NA,sim_num)
 
-Pop_j[1] = sum(Pop0)
+#Pop_j[1] = sum(Pop0)
 
 
-Monte_carlo_pop = rep(NA,end_year)
+#Monte_carlo_pop = rep(NA,end_year)
 
 
 #Monte carlo age bins
 # The sum of this with fertility added in to the firsr
 # vector row = population
-Monte_carlo_age_bins_list= list()
+#Monte_carlo_age_bins_list= list()
 
 # first year is always 1982 Pop 0 is 1982's age bins with feretility
 # it has to be subb setted by removing the fertility
 
 
-Monte_carlo_age_bins_list[[1]] =  Pop0[2:22]
+#Monte_carlo_age_bins_list[[1]] =  Pop0[2:22]
 
 #add in the 1982 births
-Monte_carlo_age_bins_list[[1]][1] = Monte_carlo_age_bins_list[[1]][1]+
+#Monte_carlo_age_bins_list[[1]][1] = Monte_carlo_age_bins_list[[1]][1]+
                                     Pop0[1]
 
 # added increase the population. Its the fertility 
 # we will add this to the 0-5 age bin
 
-added_monte_carlo = rep(NA,sim_num)
+#added_monte_carlo = rep(NA,sim_num)
 
 # innitially nothing is added
-added_monte_carlo[1] =0
+#added_monte_carlo[1] =0
 
 
 ## Immigration for monte carlo
-Imm_monte_list = list()
+#Imm_monte_list = list()
 
 # first year has to use 1982's  immigration in order to make
 # the ratio multiplier
 
-Imm_monte_list[[1]] = NI_i
+#Imm_monte_list[[1]] = NI_i
 
 
 
@@ -637,7 +644,9 @@ Leslie_Monte_list[[1]] =  LeslieMatrix
 #Save simulations in a simlength x end year long matrix
 #[,j] subsets rows [i,](up and down) subsets columns(left and right)
 # [same row number,j] lets you add values left to right in the same row
-sim_matrix = matrix(0,sim_num,end_year)
+sim_matrix100 = matrix(0,sim_num,end_year)
+sim_matrix1000 = matrix(0,sim_num2,end_year)
+sim_matrix10000 = matrix(0,sim_num3,end_year)
 
 
 ### iterative population age bins and fertility rate 
@@ -681,6 +690,8 @@ Immigrate_added = rep(NA,end_year)
 #columns is sim num long
 
 
+##########Simulating 100 times#################
+
 for (i in 1:sim_num) {
   # saves a new set of projections(rows)
   for (j in 2:end_year) {
@@ -718,7 +729,7 @@ for (i in 1:sim_num) {
      
      #save the population into a column(j) in a single projection row(i)
      
-     sim_matrix[i,j] = sum(Ni_t1)
+     sim_matrix100[i,j] = sum(Ni_t1)
      
      # update fertility and immigration randomly/stochasticly
      
@@ -730,11 +741,254 @@ for (i in 1:sim_num) {
 }
 
 
+########Simulating 1000 times##############e
+
+for (i in 1:sim_num2) {
+  # saves a new set of projections(rows)
+  for (j in 2:end_year) {
+    # j starts at 2 because we need to do j-1 
+    #to get the previous year erach time
+    # saves a new year into a projection set(columns) 
+    
+    # start with 1982's populatioon age bins vector
+    Ni_t =   Ni_t_list[[j-1]]
+    
+    #Start with 1982's leslie matrix
+    leslie = leslie_list[[j-1]]
+    
+    #start with 1982's net immigration age bins vector
+    
+    NI_t = NI_t_list[[j-1]]
+    
+    #Get the 22x1 current population bins vector with births
+    
+    Ni_t1_with_births = leslie %*% Ni_t +NI_t
+    
+    # save births
+    added[j-1] = Ni_t1_with_births[1]
+    
+    #remove the births column of the matrix but add the number
+    # of births into the 0-5 age bin
+    
+    Ni_t1 = Ni_t1_with_births[2:22]
+    
+    Ni_t1[1] = Ni_t1[1]+ added[j-1]
+    
+    #save the new age bins into the age bins list
+    
+    Ni_t_list[[j]] = Ni_t1
+    
+    #save the population into a column(j) in a single projection row(i)
+    
+    sim_matrix1000[i,j] = sum(Ni_t1)
+    
+    # update fertility and immigration randomly/stochasticly
+    
+    leslie_list[[j]] = leslie_fxn(j)
+    
+    NI_t_list[[j]] = imm_fxn(j) * 1000000
+    
+  }
+}
+
+
+################Simulating 10000 times###################
+
+for (i in 1:sim_num3) {
+  # saves a new set of projections(rows)
+  for (j in 2:end_year) {
+    # j starts at 2 because we need to do j-1 
+    #to get the previous year erach time
+    # saves a new year into a projection set(columns) 
+    
+    # start with 1982's populatioon age bins vector
+    Ni_t =   Ni_t_list[[j-1]]
+    
+    #Start with 1982's leslie matrix
+    leslie = leslie_list[[j-1]]
+    
+    #start with 1982's net immigration age bins vector
+    
+    NI_t = NI_t_list[[j-1]]
+    
+    #Get the 22x1 current population bins vector with births
+    
+    Ni_t1_with_births = leslie %*% Ni_t +NI_t
+    
+    # save births
+    added[j-1] = Ni_t1_with_births[1]
+    
+    #remove the births column of the matrix but add the number
+    # of births into the 0-5 age bin
+    
+    Ni_t1 = Ni_t1_with_births[2:22]
+    
+    Ni_t1[1] = Ni_t1[1]+ added[j-1]
+    
+    #save the new age bins into the age bins list
+    
+    Ni_t_list[[j]] = Ni_t1
+    
+    #save the population into a column(j) in a single projection row(i)
+    
+    sim_matrix10000[i,j] = sum(Ni_t1)
+    
+    # update fertility and immigration randomly/stochasticly
+    
+    leslie_list[[j]] = leslie_fxn(j)
+    
+    NI_t_list[[j]] = imm_fxn(j) * 1000000
+    
+  }
+}
+
+############## Creating Table ###################
+
+######Creating vectors for 100 sims#########
+
+eightyseven_100 = sim_matrix100[,6]
+ninetytwo_100 = sim_matrix100[,11]
+ninetyseven_100 = sim_matrix100[,16]
+zerotwo_100 = sim_matrix100[,21]
+twelve_100 = sim_matrix100[,31]
+twentytwo_100 = sim_matrix100[,41]
+thirtytwo_100 = sim_matrix100[,51]
+fourtytwo_100 = sim_matrix100[,61]
+fiftytwo_100 = sim_matrix100[,71]
+sixtytwo_100 = sim_matrix100[,81]
+seventytwo_100 = sim_matrix100[,91]
+
+###########Creating vectors for 1000 sims##########
+
+
+eightyseven_1000 = sim_matrix1000[,6]
+ninetytwo_1000 = sim_matrix1000[,11]
+ninetyseven_1000 = sim_matrix1000[,16]
+zerotwo_1000 = sim_matrix1000[,21]
+twelve_1000 = sim_matrix1000[,31]
+twentytwo_1000 = sim_matrix1000[,41]
+thirtytwo_1000 = sim_matrix1000[,51]
+fourtytwo_1000 = sim_matrix1000[,61]
+fiftytwo_1000 = sim_matrix1000[,71]
+sixtytwo_1000 = sim_matrix1000[,81]
+seventytwo_1000 = sim_matrix1000[,91]
+
+#####Creating vectors for 10000 sims#########
+
+eightyseven_10000 = sim_matrix10000[,6]
+ninetytwo_10000 = sim_matrix10000[,11]
+ninetyseven_10000 = sim_matrix10000[,16]
+zerotwo_10000 = sim_matrix10000[,21]
+twelve_10000 = sim_matrix10000[,31]
+twentytwo_10000 = sim_matrix10000[,41]
+thirtytwo_10000 = sim_matrix10000[,51]
+fourtytwo_10000 = sim_matrix10000[,61]
+fiftytwo_10000 = sim_matrix10000[,71]
+sixtytwo_10000 = sim_matrix10000[,81]
+seventytwo_10000 = sim_matrix10000[,91]
+
+######Put into matrices#########
+
+quantile100 = matrix(data = NA, nrow = 11, ncol = 100)
+
+quantile1000 = matrix(data = NA, nrow = 11, ncol = 1000)
+
+quantile10000 = matrix(data = NA, nrow = 11, ncol = 10000)
+
+
+quantile100[1,] = eightyseven_100
+quantile100[2,] = ninetytwo_100
+quantile100[3,] = ninetyseven_100
+quantile100[4,] = zerotwo_100
+quantile100[5,] = twelve_100
+quantile100[6,] = twentytwo_100
+quantile100[7,] = thirtytwo_100
+quantile100[8,] = fourtytwo_100
+quantile100[9,] = fiftytwo_100
+quantile100[10,] = sixtytwo_100
+quantile100[11,] = seventytwo_100
+
+
+quantile1000[1,] = eightyseven_1000
+quantile1000[2,] = ninetytwo_1000
+quantile1000[3,] = ninetyseven_1000
+quantile1000[4,] = zerotwo_1000
+quantile1000[5,] = twelve_1000
+quantile1000[6,] = twentytwo_1000
+quantile1000[7,] = thirtytwo_1000
+quantile1000[8,] = fourtytwo_1000
+quantile1000[9,] = fiftytwo_1000
+quantile1000[10,] = sixtytwo_1000
+quantile1000[11,] = seventytwo_1000
+
+
+quantile10000[1,] = eightyseven_10000
+quantile10000[2,] = ninetytwo_10000
+quantile10000[3,] = ninetyseven_10000
+quantile10000[4,] = zerotwo_10000
+quantile10000[5,] = twelve_10000
+quantile10000[6,] = twentytwo_10000
+quantile10000[7,] = thirtytwo_10000
+quantile10000[8,] = fourtytwo_10000
+quantile10000[9,] = fiftytwo_10000
+quantile10000[10,] = sixtytwo_10000
+quantile10000[11,] = seventytwo_10000
+
+
+quantile100t = t(quantile100)
+quantile1000t = t(quantile1000)
+quantile10000t = t(quantile10000)
 
 
 
+ci_100 = apply( quantile100t, 2 , quantile , probs = c(0.025, 0.5, 0.975) , na.rm = TRUE )
+
+ci_1000 = apply( quantile1000t, 2 , quantile , probs = c(0.025, 0.5, 0.975) , na.rm = TRUE )
+
+ci_10000 = apply( quantile10000t, 2 , quantile , probs = c(0.025, 0.5, 0.975) , na.rm = TRUE )
+
+sd_100 = apply(quantile100t, 2, sd, na.rm = TRUE)
+
+sd_1000 = apply(quantile1000t, 2, sd, na.rm = TRUE)
+
+sd_10000 = apply(quantile10000t, 2, sd, na.rm = TRUE)
 
 
+tfor100 = qt(.975, 99)
+
+tfor1000 = qt(.975, 999)
+
+tfor10000 = qt(.975, 9999)
+
+standard_error = function(quantilematrix, n) {
+  
+  apply(quantilematrix, 2, sd, na.rm = TRUE)/sqrt(n)
+}
+
+
+moe100 = standard_error(quantile100t, 100)*tfor100
+moe1000 = standard_error(quantile1000t, 1000) * tfor1000
+moe10000 = standard_error(quantile10000t, 10000) * tfor10000
+
+means100 = colMeans(quantile100t)
+means1000 = colMeans(quantile1000t)
+means10000 = colMeans(quantile10000t)
+
+conf_int_matrix100 = matrix(data = NA, nrow = 3, ncol = 11)
+conf_int_matrix1000 = matrix(data = NA, nrow = 3, ncol = 11)
+conf_int_matrix10000 = matrix(data = NA, nrow = 3, ncol = 11)
+
+conf_int_matrix100[1,] = means100 + moe100
+conf_int_matrix100[2,] = means100
+conf_int_matrix100[3,] = means100 - moe100
+
+conf_int_matrix1000[1,] = means1000 + moe1000
+conf_int_matrix1000[2,] = means1000
+conf_int_matrix1000[3,] = means1000 - moe1000
+
+conf_int_matrix10000[1,] = means10000 + moe10000
+conf_int_matrix10000[2,] = means10000
+conf_int_matrix10000[3,] = means10000 - moe10000
 
 #for (i  in 2:end_year) {
   # after monte carlo we collect the mean  from the population to get 
