@@ -966,7 +966,7 @@ standard_error = function(quantilematrix, n) {
 }
 
 
-moe100 = standard_error(quantile100t, 100)*tfor100
+moe100 = standard_error(quantile100t, 100) * tfor100
 moe1000 = standard_error(quantile1000t, 1000) * tfor1000
 moe10000 = standard_error(quantile10000t, 10000) * tfor10000
 
@@ -978,17 +978,62 @@ conf_int_matrix100 = matrix(data = NA, nrow = 3, ncol = 11)
 conf_int_matrix1000 = matrix(data = NA, nrow = 3, ncol = 11)
 conf_int_matrix10000 = matrix(data = NA, nrow = 3, ncol = 11)
 
-conf_int_matrix100[1,] = means100 + moe100
+conf_int_matrix100[1,] = means100 - moe100
 conf_int_matrix100[2,] = means100
-conf_int_matrix100[3,] = means100 - moe100
+conf_int_matrix100[3,] = means100 + moe100
 
-conf_int_matrix1000[1,] = means1000 + moe1000
+conf_int_matrix1000[1,] = means1000 - moe1000
 conf_int_matrix1000[2,] = means1000
-conf_int_matrix1000[3,] = means1000 - moe1000
+conf_int_matrix1000[3,] = means1000 + moe1000
 
-conf_int_matrix10000[1,] = means10000 + moe10000
+conf_int_matrix10000[1,] = means10000 - moe10000
 conf_int_matrix10000[2,] = means10000
-conf_int_matrix10000[3,] = means10000 - moe10000
+conf_int_matrix10000[3,] = means10000 + moe10000
+
+###################Plots for CI's#######################
+
+library(cowplot)
+library(ggplot2)
+
+actual_87 = 245
+actual_92 = 257
+actual_97 = 271
+actual_02 = 287
+actual_12 = 314
+actual_20 = 331
+
+actual_vec = c(245, 257, 271, 287, 314, 331)
+actual_vec_trans = t(actual_vec)
+
+conf_int_matrix100_simp = conf_int_matrix100/10000
+
+
+install.packages("gt")
+library(gt)
+library(tidyverse)
+
+conf_int_matrix100trans = t(conf_int_matrix100)
+
+conf_int_matrix100trans2 = conf_int_matrix100trans/1000000
+
+
+dfci = as.data.frame(conf_int_matrix100trans2[1:6,])
+
+
+rowname_vec = c(1987, 1992, 1997, 2002, 2012, 2022)
+
+dfci2 = dfci %>%
+  mutate("Actual US Population" = actual_vec) %>%
+  mutate("Years" = rowname_vec) %>%
+  rename("Lower Bound" = "V1", "Mean" = "V2", "Upper Bound" = "V3")
+  
+rownames(dfci2) = c("1987", "1992", "1997", "2002", "2012", "2022")
+
+dfci2 %>%
+  gt() %>%
+  tab_header(title = "Confidence Intervals vs Actual Population")
+  
+
 
 #for (i  in 2:end_year) {
   # after monte carlo we collect the mean  from the population to get 
