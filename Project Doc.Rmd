@@ -1,0 +1,34 @@
+---
+title: "400 Leslie Matrix Research Paper"
+author: "Oki Ogbe, Carlos Delgado, Matthew Bayley"
+date: "12/12/2020"
+output:
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+Motivation:
+
+Being able to properly project and forecast a population’s growth is extremely important in being able to facilitate the distribution of vital resources to a population’s inhabitants. Failure to adequately account for any increases/decreases in population could potentially lead to unintended consequences further along the line. Some noteworthy examples of institutional systems which depend on accurate population projections are social security and retirement, transportation services, education, public services, etc. Upon further investigation, our team came across a research paper written Peter Pflaumer, professor at the University of Dortmund. Pflaumer’s paper used a combination of Monte Carlo and the Leslie Matrix as a way to project future population. Pflaumer used birth rate, survival rate, net immigration as well as fertility rate, and inputted these values into their corresponding location within the Leslie Matrix. 
+
+It is worth noting that although this paper utilizes human data, the process and methodology can easily be extended to other species and populations. As long as the aforementioned data regarding the four variables are available for a species, population projections can be derived. 
+
+Further motivation for attempting to replicate this data is the time period the study was conducted. Published in 1984, the paper claims to have used Monte Carlo simulations in the thousands (100, 1000, 100000). Our team wondered how these simulations could have been performed given the lack of powerful statistical computing available during this era and came to the conclusion that these simulations must have been run over the course of several days (at a minimum). Due to the high likelihood of human error that may have resulted during this study, we wondered whether having more modern statistical software would lead to similar population projections as those obtained in the original study. 
+
+Our final motivation for conducting and replicating this study is to attempt to extend this process using more up-to-date information via the 2010 census. If the methodology and process described in the paper is indeed a strong predictor of future population figures, then we can use the 2010 census as a way to forecast future years with more accuracy. The final section of this paper will attempt to create these estimates, although it is worth noting that these estimates can only be verified with the passage of time. 
+
+
+```{r,echo=FALSE}
+
+```
+
+
+
+
+Methodology:
+
