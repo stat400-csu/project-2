@@ -446,6 +446,7 @@ head(Pop0)
 ## first year population
 sum(Pop0)
 Pop0
+Ft_i
 ```
 
 

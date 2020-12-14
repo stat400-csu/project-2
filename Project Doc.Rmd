@@ -86,14 +86,8 @@ Results:
 
 Acknowledgments:
 
+One area that needs to be addressed is that survival rate was used as a fixed variable. In the original study survival rate was random. This would result in slight differences in results between the paper and our replication. Furthermore,
+we used the 1982 census net immigration projection due to the values not being readily available in the 2010 census information. Net immigration could potentially have changed drastically in recent years, but the information was not readily available for use in our study. Another point to note is that we used the same survival rates for the 85-100 year age bins. Given how there is no age bin after 100, the survival rate should have been 0 for the 100+ age bin. Also, 1982 fertility rates were expanded into our 2010 extension. The reasoning for this is similar to net immigration, in that the information was not readily available in 2010. The author also used life expectancy in his paper, which we did not. Our final, and most important acknowledgment is that we discarded the first 25 simulations due to the population projections decreasing. This means that our projections for 2010-2050 are, in reality, projections from 2035-2075. 
 
 
-One area that needs to be addressed
-
-Is that we used d not have survivorship random
-
-We used the 1982  census net immigration projection
-Used the same survivorship for 85-100 age bins, even though they are supposed to decrease towards 0 since 100 year olds can’t survive to the next age bin
-We used 1982's fertility for 2010's 10-14 age bin
-We did not use the life expectancy rates like the author did
 
