@@ -65,3 +65,20 @@ The following images show how the Leslie Matrix is Constructed in R
 
 
 ![2010 Immigration](/cloud/project/Immigration.png)
+
+Results:
+
+![](/cloud/project/quant2010.png)
+
+![](/cloud/project/CI2010.png)
+
+![2011 Population Age Bins](/cloud/project/2011pop.png)
+
+![2010-2050 Population Projections](/cloud/project/2011to2050pop.PNG)
+![](/cloud/project/CI1982.png)
+
+![](/cloud/project/Table 1.png)
+
+
+![](/cloud/project/Table 2.png)
+
