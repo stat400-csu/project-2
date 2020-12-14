@@ -5,6 +5,9 @@ date: "12/12/2020"
 output:
   pdf_document: default
   word_document: default
+  header-includes:
+  - \usepackage{leading}
+  - \leading{18pt}
 ---
 
 ```{r setup, include=FALSE}
@@ -41,7 +44,13 @@ Inverse Transform:
 
 The distribution used by Pflaumer in the study is relatively similar to the uniform distribution. However, he refers to it as a "Rectangular Distribution". The above picture details this PDF. Continuing forward with the piecewise inverse transformation, we first integrated the first piece from "a" to "y", setting the subsequent integral equal to "u". The next step was solving for y. The next step involved integrating the second piece from "m" to "y", once again setting the resulting integral equal to "u". The corresponding piecewise cumulative distribution functions are shown in Latex.
 
-
+\[ \begin{cases} 
+      u = \frac{y}{2(m-a)}-\frac{y}{2(m-a)} &  a \leq y\leq m \\
+      u = \frac{y-m}{2(-m+b)} & m\leq y\leq b \\
+      0    \quad otherwise
+   \end{cases}
+\]
+$$  $$
 
 
 
