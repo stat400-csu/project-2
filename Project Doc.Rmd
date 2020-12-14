@@ -3,8 +3,8 @@ title: "400 Leslie Matrix Research Paper"
 author: "Oki Ogbe, Carlos Delgado, Matthew Bayley"
 date: "12/12/2020"
 output:
-  pdf_document: default
   word_document: default
+  pdf_document: default
   header-includes:
   - \usepackage{leading}
   - \leading{18pt}
