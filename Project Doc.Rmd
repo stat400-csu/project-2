@@ -50,7 +50,18 @@ The distribution used by Pflaumer in the study is relatively similar to the unif
       0    \quad otherwise
    \end{cases}
 \]
-$$  $$
 
 
+The following images show how the Leslie Matrix is Constructed in R
 
+
+![2010 Leslie Matrix](/cloud/project/Leslie.png)
+
+
+![2010 Birth Rate](/cloud/project/Birthrate.png)
+
+
+![2010 Population](/cloud/project/Population.png)
+
+
+![2010 Immigration](/cloud/project/Immigration.png)
