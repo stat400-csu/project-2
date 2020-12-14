@@ -75,10 +75,25 @@ Results:
 ![2011 Population Age Bins](/cloud/project/2011pop.png)
 
 ![2010-2050 Population Projections](/cloud/project/2011to2050pop.PNG)
-![](/cloud/project/CI1982.png)
 
 ![](/cloud/project/Table 1.png)
 
 
 ![](/cloud/project/Table 2.png)
+
+![](/cloud/project/CI1982.png)
+
+
+Acknowledgments:
+
+
+
+One area that needs to be addressed
+
+Is that we used d not have survivorship random
+
+We used the 1982  census net immigration projection
+Used the same survivorship for 85-100 age bins, even though they are supposed to decrease towards 0 since 100 year olds can’t survive to the next age bin
+We used 1982's fertility for 2010's 10-14 age bin
+We did not use the life expectancy rates like the author did
 
