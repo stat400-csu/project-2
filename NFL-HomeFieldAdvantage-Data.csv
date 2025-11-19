@@ -1,37 +1,38 @@
 
-,Record,Elevation,Crowd Impact,Normalizing Constant,,,Total,,,,,,
-Atlanta Falcons,0.53,1.6702,-0.72,2,,,3.48,,,,,,
-Arizona Cardinals,0.46,1.9241,0.32,2,,,4.70,,,,,,
-Baltimore Ravens,0.61,0.3090,0.14,2,,,3.06,,,,,,
-Buffalo Bills,0.82,1.0021,0.23,2,,,4.06,,,,,,
-Carolina Panthers,0.48,1.1241,0.44,2,,,4.05,,,,,,
-Chicago Bears,0.57,0.9971,-1.64,2,,,1.93,,,,,,
-Cincinnati Bengals,0.44,1.2393,-0.50,2,,,3.18,,,,,,
-Cleveland Browns,0.36,1.0906,-0.81,2,,,2.64,,,,,,
-Dallas Cowboys,0.49,0.8067,3.57,2,,,6.87,,,,,,
-Denver Broncos,0.80,8.8187,0.90,2,,,12.52,,,,,,
-Detroit Lions,0.68,1.0957,-0.74,2,,,3.03,,,,,,
-Green Bay Packers,0.66,0.9704,1.28,2,,,4.91,,,,,,
-Houston Texans,0.58,0.1754,0.21,2,,,2.96,,,,,,
-Indianapolis Colts,0.77,1.2009,-0.68,2,,,3.29,,,,,,
-Jacksonville Jaguars,0.50,0.0050,-0.58,2,,,1.93,,,,,,
-Kansas City Chiefs,0.82,1.5182,0.64,2,,,4.98,,,,,,
-Las Vegas Raiders,0.30,3.3404,-1.06,2,,,4.58,,,,,,
-Los Angeles Chargers,0.63,0.5094,0.29,2,,,3.42,,,,,,
-Los Angeles Rams,0.63,0.5094,0.51,2,,,3.65,,,,,,
-Miami Dolphins,0.56,0.0100,-0.53,2,,,2.04,,,,,,
-Minnesota Vikings,0.57,1.3412,-0.37,2,,,3.54,,,,,,
-New England Patriots,0.54,0.4760,-0.72,2,,,2.30,,,,,,
-New Orleans Saints,0.36,0.0109,0.10,2,,,2.47,,,,,,
-New York Giants,0.32,0.0050,1.92,2,,,4.24,,,,,,
-New York Jets,0.33,0.0050,0.88,2,,,3.21,,,,,,
-Philadelphia Eagles,0.78,0.0651,0.08,2,,,2.93,,,,,,
-Pittsburgh Steelers,0.66,1.2360,-0.21,2,,,3.69,,,,,,
-San Francisco 49ers,0.49,0.0869,0.23,2,,,2.81,,,,,,
-Seattle Seahawks,0.52,0.2422,-0.10,2,,,2.67,,,,,,
-Tampa Bay Buccaneers,0.52,0.0802,-0.85,2,,,1.74,,,,,,
-Tennessee Titans,0.41,0.9253,-1.50,2,,,1.84,,,,,,
-Washington Commanders,0.55,0.1336,-0.74,2,,,1.93,,,,,,
+,Record,Elevation,Crowd Impact,Normalizing Constant,Total
+Atlanta Falcons,0.53,1.6702,-0.72,2,3.48
+Arizona Cardinals,0.46,1.9241,0.32,2,4.70
+Baltimore Ravens,0.61,0.3090,0.14,2,3.06
+Buffalo Bills,0.82,1.0021,0.23,2,4.06
+Carolina Panthers,0.48,1.1241,0.44,2,4.05
+Chicago Bears,0.57,0.9971,-1.64,2,1.93
+Cincinnati Bengals,0.44,1.2393,-0.50,2,3.18
+Cleveland Browns,0.36,1.0906,-0.81,2,2.64
+Dallas Cowboys,0.49,0.8067,3.57,2,6.87
+Denver Broncos,0.80,8.8187,0.90,2,12.52
+Detroit Lions,0.68,1.0957,-0.74,2,3.03
+Green Bay Packers,0.66,0.9704,1.28,2,4.91
+Houston Texans,0.58,0.1754,0.21,2,2.96
+Indianapolis Colts,0.77,1.2009,-0.68,2,3.29
+Jacksonville Jaguars,0.50,0.0050,-0.58,2,1.93
+Kansas City Chiefs,0.82,1.5182,0.64,2,4.98
+Las Vegas Raiders,0.30,3.3404,-1.06,2,4.58
+Los Angeles Chargers,0.63,0.5094,0.29,2,3.42
+Los Angeles Rams,0.63,0.5094,0.51,2,3.65
+Miami Dolphins,0.56,0.0100,-0.53,2,2.04
+Minnesota Vikings,0.57,1.3412,-0.37,2,3.54
+New England Patriots,0.54,0.4760,-0.72,2,2.30
+New Orleans Saints,0.36,0.0109,0.10,2,2.47
+New York Giants,0.32,0.0050,1.92,2,4.24
+New York Jets,0.33,0.0050,0.88,2,3.21
+Philadelphia Eagles,0.78,0.0651,0.08,2,2.93
+Pittsburgh Steelers,0.66,1.2360,-0.21,2,3.69
+San Francisco 49ers,0.49,0.0869,0.23,2,2.81
+Seattle Seahawks,0.52,0.2422,-0.10,2,2.67
+Tampa Bay Buccaneers,0.52,0.0802,-0.85,2,1.74
+Tennessee Titans,0.41,0.9253,-1.50,2,1.84
+Washington Commanders,0.55,0.1336,-0.74,2,1.93
+
 
 
 
