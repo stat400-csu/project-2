@@ -1,5 +1,5 @@
 
-,Record,Elevation,Crowd Impact,Normalizing Constant,,,Total,,,,,,
+,Record,Elevation,Crowd Impact,Normalizing Constant,Total,,,,,,
 Atlanta Falcons,0.53,1.6702,-0.72,2,,,3.48,,,,,,
 Arizona Cardinals,0.46,1.9241,0.32,2,,,4.70,,,,,,
 Baltimore Ravens,0.61,0.3090,0.14,2,,,3.06,,,,,,
@@ -32,4 +32,5 @@ Seattle Seahawks,0.52,0.2422,-0.10,2,,,2.67,,,,,,
 Tampa Bay Buccaneers,0.52,0.0802,-0.85,2,,,1.74,,,,,,
 Tennessee Titans,0.41,0.9253,-1.50,2,,,1.84,,,,,,
 Washington Commanders,0.55,0.1336,-0.74,2,,,1.93,,,,,,
+
 
