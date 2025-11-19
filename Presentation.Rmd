@@ -1,0 +1,9 @@
+---
+title: "Come Up With A Clever Title Here"
+author: "Noah Sturgeon, Chase Bishop, Carter "
+output:
+  pdf_document: default
+  html_document: default
+---
+
+Put your portion of code here once it is COMPLETE. Until then, this document stays empty.
