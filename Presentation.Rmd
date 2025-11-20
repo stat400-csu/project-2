@@ -1,6 +1,6 @@
 ---
 title: "Simulating NFL Playoff Chances"
-author: "Noah Sturgeon, Chase Bishop, Carter Rault"
+author: "Noah Sturgeon, Chase Bishop, Carter Nault"
 output:
   pdf_document: default
   html_document: default
