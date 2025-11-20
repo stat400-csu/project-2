@@ -7,7 +7,16 @@
 elo_updater <- function(game_results, sensitivity) {
   K <- sensitivity
   for (team in 1:length(game_results$elo)) {
-    game_results[team,"elo"] <- game_results[team,"elo"] + 
-      K * (game_results[team,"actual_result"] - game_results[team,"win_probability"])
+    game_results[team,'elo'] <- game_results[team,'elo'] + 
+      K * (game_results[team,'actual_result'] - game_results[team,'win_probability'])
   }
 }
+
+test_results <- data.frame(
+  team = c("A", "B"),
+  elo = c(1100, 900),
+  win_probability = c(0.8, 0.2),
+  actual_result = c(1, 0)
+)
+
+elo_updater(test_results, 32)
