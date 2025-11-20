@@ -1,6 +1,6 @@
 library(tidyverse)
 
-file <- "2024_standings_2025_odds(in)"
+file <- "2024_standings_2025_odds(in).csv"
 standings_odds <- read_csv(file)
 
 weights <- c(0.4, 0.6)
