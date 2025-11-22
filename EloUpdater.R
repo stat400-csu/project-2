@@ -1,8 +1,7 @@
-# input: dataframe with:
-# 1. teams = the names of the teams
-# 2. win_probability = Expected probability of winning (P_home, or 1-P_home)
-# 3. actual_result = What actually happened (1 for win, 0.5 for tie, 0 for loss)
-# 4. elo = Current elo of the team
+# input: dataframe with at least:
+# 1. win_probability = Expected probability of winning (P_home, or 1-P_home)
+# 2. actual_result = What actually happened (1 for win, 0.5 for tie, 0 for loss)
+# 3. elo = Current elo of the team
 # and a K-value, which is the sensitivity of the elo system
 elo_updater <- function(game_results, sensitivity) {
   K <- sensitivity
