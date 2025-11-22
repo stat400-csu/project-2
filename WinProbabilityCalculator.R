@@ -7,5 +7,10 @@ set.seed(400)
 # 4. home field advantage
 calculate_win_probabilities <- function(team_names, home_teams, elo, hfa) {
   win_probabilities <- rep(0, length(team_names))
-  
+  sorted_teams <- team_names |> arrange()
+  for(team in 1:length(team_names)) {
+    if(team_names[team] == home_teams[team]) {
+      
+    }
+  }
 }
