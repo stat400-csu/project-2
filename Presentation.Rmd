@@ -5,5 +5,3 @@ output:
   pdf_document: default
   html_document: default
 ---
-
-Put your portion of code here once it is COMPLETE. Until then, this document stays empty.
