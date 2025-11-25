@@ -8,7 +8,7 @@ weights <- c(0.4, 0.6)
 mean_elo <- 1000
 scale <- 50
 
-start_elo <- standings_odds |>
+team_data <- standings_odds |>
   arrange(Tm) |>
   rename(Team_Name = Tm) |>
   mutate(Weighted_ProjW = weights[1] * W + weights[2] * ProjW) |>
