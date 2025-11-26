@@ -5,6 +5,8 @@ output:
   pdf_document: default
   html_document: default
 ---
+
+I've been using this as a testing ground, as getting test data has started to require code from multiple files.
 ```{r elo_start}
 library(tidyverse)
 
@@ -44,9 +46,10 @@ calculate_win_probabilities <- function(team_names, home_teams, elo, hfa, S) {
 }
 
 test_team_data <- team_data[1:2,] 
-test_team_data |> 
+test_team_data <- test_team_data |> 
   mutate(Schedule = rep("Atlanta Falcons",2)) |> 
   mutate(win_prob = calculate_win_probabilities(Team_Name, Schedule, Elo, HFA, 400))
+test_team_data
 ```
 
 ```{r game_simulator}
@@ -68,5 +71,5 @@ week_simulator <- function(team_names, home_teams, win_probabilities) {
   return(game_results)
 }
 
-test_team_data |> mutate(week_results)
+test_team_data |> mutate(week_results = week_simulator(Team_Name, Schedule, win_prob))
 ```
