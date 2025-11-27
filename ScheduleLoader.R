@@ -4,14 +4,25 @@ library(nflreadr)
 schedule <- load_schedules(2025)
 
 schedule_by_week <- function(week_num) {
-  week_schedule <- schedule |>
+  away_teams <- schedule |>
     select(week, away_team, home_team, result) |>
     filter(week == week_num) |>
-    mutate(away_win = result < 0) |>
-    mutate(home_win = result > 0)
+    rename(team = away_team) |>
+    mutate(win = result < 0) |>
+    select(team, home_team, win)
+    
+  home_teams <- schedule |>
+    select(week, away_team, home_team, result) |>
+    filter(week == week_num) |>
+    mutate(team = home_team) |>
+    mutate(win = result > 0) |>
+    select(team, home_team, win)
+  
+  week_schedule <- bind_rows(away_teams, home_teams)
   return(week_schedule)
 }
 
+#Maybe possibly dont need anymore
 get_home_team_data_from_schedule <- function(home_teams, away_teams) {
   team_count <- length(home_teams) * 2
   home_team_data <- data.frame(team_name = rep(NA, team_count), 
