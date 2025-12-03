@@ -1,6 +1,6 @@
 
 Team Code, Team Name,Record,Elevation,Crowd Impact,Normalizing Constant,Point Advantage,
-ARZ,Arizona Cardinals,0.46,0.3873,0.32,2,3.16,
+ARI,Arizona Cardinals,0.46,0.3873,0.32,2,3.16,
 ATL,Atlanta Falcons,0.53,0.2809,-0.72,2,2.09,
 BAL,Baltimore Ravens,0.61,-0.2896,0.14,2,2.46,
 BUF,Buffalo Bills,0.82,0.0009,0.23,2,3.05,
@@ -32,5 +32,6 @@ SEA,Seattle Seahawks,0.52,-0.3176,-0.10,2,2.11,
 TB,Tampa Bay Buccaneers,0.52,-0.3855,-0.85,2,1.28,
 TEN,Tennessee Titans,0.41,-0.0313,-1.50,2,0.88,
 WAS,Washington Commanders,0.55,-0.3631,-0.74,2,1.44,
+
 
 
