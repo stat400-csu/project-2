@@ -41,5 +41,6 @@ get_home_team_data_from_schedule <- function(home_teams, away_teams) {
 }
 
 #Test code
-week_1_schedule <- schedule_by_week(1)
+week_1_schedule <- schedule_by_week(4)
+View(week_1_schedule)
 get_home_team_data_from_schedule(week_1_schedule$home_team, week_1_schedule$away_team)

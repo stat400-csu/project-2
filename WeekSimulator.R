@@ -1,7 +1,4 @@
-get_opposite_index_of_value <- function(input_vector, target_index) {
-  result <- which(input_vector == input_vector[target_index])
-  return(result[result != target_index])
-}
+source("WinProbabilityCalculator.R")
 
 week_simulator <- function(team_names, home_teams, win_probabilities) {
   game_results <- rep(-1,length(team_names))

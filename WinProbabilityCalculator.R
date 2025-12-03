@@ -8,34 +8,10 @@ calculate_win_probabilities <- function(team_names, home_teams, elo, hfa, S) {
   for(team in 1:length(team_names)) {
     if(team_names[team] == home_teams[team]) {
       away_team_index <- get_opposite_index_of_value(home_teams, team)
-      exponent <- (-1*(elo[team] + hfa[team] - elo[away_team_index]))/S 
+      exponent <- (-1*(elo[team] + hfa[team] - elo[away_team_index]))/S
       win_probabilities[team] <- 1/(1+10^exponent)
       win_probabilities[away_team_index] <- 1-win_probabilities[team]
     }
   }
   return(win_probabilities)
 }
-
-# Testing code pulled from EloStart
-library(tidyverse)
-
-standings_odds <- read_csv("2024_standings_2025_odds(in).csv")
-
-hfa_data <- read_csv("NFL-HomeFieldAdvantage-Data.csv")
-
-weights <- c(0.4, 0.6)
-mean_elo <- 1000
-scale <- 50
-
-team_data <- standings_odds |>
-  arrange(Tm) |>
-  rename(Team_Name = Tm) |>
-  mutate(Weighted_ProjW = weights[1] * W + weights[2] * ProjW) |>
-  mutate(Elo = (Weighted_ProjW - 8.5) * scale + mean_elo) |>
-  mutate(HFA = hfa_data$Total)
-
-
-test_team_data <- team_data[1:2,] 
-test_team_data |> 
-  mutate(Schedule = rep("Atlanta Falcons",2)) |> 
-  mutate(win_prob = calculate_win_probabilities(Team_Name, Schedule, Elo, HFA, 400))
