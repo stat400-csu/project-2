@@ -1,2 +1,0 @@
-HomeTeamProb <- (HomeELO-AwayELO)*(PointAdvantage/2.2)
-WinProb <- pnorm(HomeTeamProb)
