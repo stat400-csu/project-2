@@ -1,9 +1,9 @@
 library(tidyverse)
 library(nflreadr)
 
-schedule <- load_schedules(2025)
-
 schedule_by_week <- function(week_num) {
+  schedule <- load_schedules(2025)
+  
   away_teams <- schedule |>
     select(week, away_team, home_team, result) |>
     filter(week == week_num) |>
