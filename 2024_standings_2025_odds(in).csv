@@ -1,33 +1,34 @@
-Tm,W,L,T,ProjW
-Kansas City Chiefs,15,2,0,11.5
-Buffalo Bills,13,4,0,12.5
-Baltimore Ravens,12,5,0,11.5
-Houston Texans,10,7,0,9.5
-Los Angeles Chargers,11,6,0,9.5
-Pittsburgh Steelers,10,7,0,8.5
-Denver Broncos,10,7,0,9.5
-Cincinnati Bengals,9,8,0,9.5
-Indianapolis Colts,8,9,0,7.5
-Miami Dolphins,8,9,0,7.5
-New York Jets,5,12,0,6.5
-Jacksonville Jaguars,4,13,0,7.5
-New England Patriots,4,13,0,8.5
-Las Vegas Raiders,4,13,0,6.5
-Cleveland Browns,3,14,0,5.5
-Tennessee Titans,3,14,0,6.5
-Detroit Lions,15,2,0,10.5
-Philadelphia Eagles,14,3,0,11.5
-Tampa Bay Buccaneers,10,7,0,9.5
-Los Angeles Rams,10,7,0,9.5
-Minnesota Vikings,14,3,0,9.5
-Washington Commanders,12,5,0,9.5
-Green Bay Packers,11,6,0,10.5
-Seattle Seahawks,10,7,0,8.5
-Atlanta Falcons,8,9,0,8.5
-Arizona Cardinals,8,9,0,8.5
-Dallas Cowboys,7,10,0,7.5
-San Francisco 49ers,6,11,0,10.5
-Chicago Bears,5,12,0,8.5
-Carolina Panthers,5,12,0,6.5
-New Orleans Saints,5,12,0,4.5
-New York Giants,3,14,0,5.5
+TCode,Tm,W,L,T,ProjW
+KC,Kansas City Chiefs,15,2,0,11.5
+BUF,Buffalo Bills,13,4,0,12.5
+BAL,Baltimore Ravens,12,5,0,11.5
+HOU,Houston Texans,10,7,0,9.5
+LAC,Los Angeles Chargers,11,6,0,9.5
+PIT,Pittsburgh Steelers,10,7,0,8.5
+DEN,Denver Broncos,10,7,0,9.5
+CIN,Cincinnati Bengals,9,8,0,9.5
+IND,Indianapolis Colts,8,9,0,7.5
+MIA,Miami Dolphins,8,9,0,7.5
+NYJ,New York Jets,5,12,0,6.5
+JAX,Jacksonville Jaguars,4,13,0,7.5
+NE,New England Patriots,4,13,0,8.5
+LV,Las Vegas Raiders,4,13,0,6.5
+CLE,Cleveland Browns,3,14,0,5.5
+TEN,Tennessee Titans,3,14,0,6.5
+DET,Detroit Lions,15,2,0,10.5
+PHI,Philadelphia Eagles,14,3,0,11.5
+TB,Tampa Bay Buccaneers,10,7,0,9.5
+LAR,Los Angeles Rams,10,7,0,9.5
+MIN,Minnesota Vikings,14,3,0,9.5
+WAS,Washington Commanders,12,5,0,9.5
+GB,Green Bay Packers,11,6,0,10.5
+SEA,Seattle Seahawks,10,7,0,8.5
+ATL,Atlanta Falcons,8,9,0,8.5
+ARI,Arizona Cardinals,8,9,0,8.5
+DAL,Dallas Cowboys,7,10,0,7.5
+SF,San Francisco 49ers,6,11,0,10.5
+CHI,Chicago Bears,5,12,0,8.5
+CAR,Carolina Panthers,5,12,0,6.5
+NO,New Orleans Saints,5,12,0,4.5
+NYG,New York Giants,3,14,0,5.5
+
