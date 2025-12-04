@@ -8,14 +8,18 @@ schedule_by_week <- function(week_num) {
     select(week, away_team, home_team, result) |>
     filter(week == week_num) |>
     rename(team = away_team) |>
-    mutate(win = result < 0) |>
+    mutate(win = case_when(result < 0 ~ 1,
+                           result == 0 ~ 0.5,
+                           .default = 0)) |>
     select(team, home_team, win)
     
   home_teams <- schedule |>
     select(week, away_team, home_team, result) |>
     filter(week == week_num) |>
     mutate(team = home_team) |>
-    mutate(win = result > 0) |>
+    mutate(win = case_when(result > 0 ~ 1,
+                           result == 0 ~ 0.5,
+                           .default = 0))  |>
     select(team, home_team, win)
   
   week_schedule <- bind_rows(away_teams, home_teams)
