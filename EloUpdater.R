@@ -6,8 +6,10 @@
 elo_updater <- function(win_probabilities, actual_results, elos, sensitivity) {
   K <- sensitivity
   for (team in 1:length(elos)) {
-    elos[team] <- elos[team] + 
-      K * (actual_results[team] - win_probabilities[team])
+    if (!is.na(win_probabilities[team])) {
+      elos[team] <- elos[team] + 
+        K * (actual_results[team] - win_probabilities[team])
+    }
   }
   return(elos)
 }
