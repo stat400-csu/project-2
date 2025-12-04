@@ -26,9 +26,9 @@ divisions <- list(
 )
 head(divisions)
 
-division_standings <- function(division, team_names, wins){
+division_standings <- function(divisions, team_names, wins){
   standings <- data.frame(
-    division = division,
+    division = divisions,
     team = team_names,
     wins = wins
   )
@@ -36,6 +36,7 @@ division_standings <- function(division, team_names, wins){
   rownames(standings) <- NULL
   return(standings)
 }
+
 
 
 
