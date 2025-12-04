@@ -24,7 +24,12 @@ divisions <- list(
   NFC_West = NFC_West
 )
 
+conference <- list(
+  AFC = c(AFC_North, AFC_East, AFC_South, AFC_West),
+  NFC = c(NFC_North, NFC_East, NFC_South, NFC_West)
+)
 head(divisions)
+head(conference)
 
 #wins for testing
 wins <- c(
@@ -51,6 +56,8 @@ division_standings <- function(divisions, team_names, wins){
   rownames(standings) <- NULL
   return(standings)
 }
+
+
 #division_standings sorts position in the division 
 
 
@@ -64,13 +71,26 @@ names(all_standings) <- names(divisions)
 division_winners <- sapply(all_standings,function(df) df$team[1])
 division_winners
 
-AFC_winners <- division_winners[startsWith(names(division_winners), "AFC")]
-NFC_winners <- division_winners[startsWith(names(division_winners), "NFC")]
-AFC_winners
-NFC_winners
+AFC_divwinners <- division_winners[startsWith(names(division_winners), "AFC")]
+NFC_divwinners <- division_winners[startsWith(names(division_winners), "NFC")]
+
+AFC_nondivwin <- setdiff(conference$AFC, AFC_divwinners)
+NFC_nondivwin <- setdiff(conference$NFC, NFC_divwinners)
+
+AFC_wildcard <- sort(wins[AFC_nondivwin], decreasing = T)[1:3]
+NFC_wildcard <- sort(wins[NFC_nondivwin], decreasing = T) [1:3]
 #Then we get next 3 
+AFC_wildcard
+NFC_wildcard
 
 #Tie breaker clauses
 #Record <- Head to Head <- Division <- Conference <- Strength of Victory <- Strength of Schedule
+
+# Playoff run
+#AFC & NFC 1 seed First round bye
+## 2 plays 7, 3 plays 6, 4 plays 5 
+### HFA applies to higher seed (lower number)
+#### Super Bowl ELO DIF
+
 
 
