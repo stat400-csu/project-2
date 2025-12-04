@@ -34,7 +34,7 @@ head(conference)
 #wins for testing
 wins <- c(
   # AFC
-  BAL = 11, PIT = 9, CIN = 7, CLE = 6,
+  BAL = 13, PIT = 11, CIN = 7, CLE = 6,
   NE  = 8,  BUF = 10, MIA = 9, NYJ = 6,
   JAX = 9,  IND = 7,  HOU = 12, TEN = 5,
   KC  = 13, LAC = 8,  DEN = 9, LV  = 7,
@@ -83,6 +83,17 @@ NFC_wildcard <- sort(wins[NFC_nondivwin], decreasing = T) [1:3]
 AFC_wildcard
 NFC_wildcard
 
+#wins/records depending on how we are doing this
+seed_placement <- function(winners, wildcards, wins){ 
+  teams <- c(winners, names(wildcards))
+  sorted <- sort(wins[teams], decreasing = T)
+  return(sorted)
+}
+
+AFC_seedplacement <- seed_placement(AFC_divwinners, AFC_wildcard, wins)
+NFC_seedplacement <- seed_placement(NFC_divwinners, NFC_wildcard, wins)
+AFC_seedplacement
+NFC_seedplacement
 #Tie breaker clauses
 #Record <- Head to Head <- Division <- Conference <- Strength of Victory <- Strength of Schedule
 
