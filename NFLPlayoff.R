@@ -12,6 +12,18 @@ NFC_East <- c("PHI", "DAL", "WAS", "NYG")
 NFC_South <- c("TB", "CAR", "ATL", "NO")
 NFC_West <- c("LAR", "SEA", "SF", "ARI")
 
+
+divisions <- list(
+  AFC_North = AFC_North,
+  AFC_East = AFC_East, 
+  AFC_South = AFC_South,
+  AFC_West = AFC_West,
+  
+  NFC_North = NFC_North,
+  NFC_East = NFC_East,
+  NFC_South = NFC_South,
+  NFC_West = NFC_West
+)
 head(divisions)
 
 division_standings <- function(division, team_names, wins){
@@ -24,6 +36,7 @@ division_standings <- function(division, team_names, wins){
   rownames(standings) <- NULL
   return(standings)
 }
+
 
 
 
