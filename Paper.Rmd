@@ -112,3 +112,20 @@ team_data <- standings_odds |>
   mutate(HFA = hfa_data$'Point Advantage') |>
   select(TCode, Team_Name, Elo, HFA)
 ```
+
+Each team has a starting Elo which is a weighted average of last year's standings and the Vegas over-under line for wins from the preseason. Slightly more weight was placed on the over-under line to account for the changes in coaching and roster that an NFL team undergoes over the offseason, which would be considered in the preseason betting lines.
+
+```{r elo_up_to_sim_start}
+last_week <- 13
+
+for (week in 1:last_week) {
+  current_week_schedule <- schedule_by_week(week)
+  current_week_schedule <- rename(current_week_schedule, TCode = team)
+  sched_w_elo <- left_join(team_data, current_week_schedule)
+  sched_w_elo$WP <- calculate_win_probabilities(sched_w_elo$TCode, sched_w_elo$home_team, sched_w_elo$Elo, sched_w_elo$HFA, 400)
+  sched_w_elo$Elo <- elo_updater(sched_w_elo$WP, sched_w_elo$win, sched_w_elo$Elo, scale)
+  team_data$Elo <- sched_w_elo$Elo
+}
+```
+
+Using the week schedule, win probability and elo updater functions, the Elo of each team is updated for each week that has already been played in the season, which was up until week 13.
