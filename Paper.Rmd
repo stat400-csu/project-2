@@ -240,3 +240,8 @@ NFC_seedplacement
 #### Super Bowl ELO DIF
 
 '''
+
+
+References
+
+HFA Data
