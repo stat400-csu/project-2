@@ -131,7 +131,8 @@ for (week in 1:last_week) {
 Using the week schedule, win probability and elo updater functions, the Elo of each team is updated for each week that has already been played in the season, which was up until week 13.
 
 
-''' {r playoffseed}
+```{r playoffseed}
+
 
 #Season Simulator 
 
@@ -239,7 +240,8 @@ NFC_seedplacement
 ###HFA applies to higher seed (lower number)
 ####Super Bowl ELO DIF
 
-'''
+
+```
 
 
 References
