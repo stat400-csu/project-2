@@ -134,7 +134,7 @@ Using the week schedule, win probability and elo updater functions, the Elo of e
 {r playoffseed}
 '''
 #Season Simulator 
-# We need to sort by division
+
 
 #AFC Divisions
 AFC_North <- c("BAL","PIT", "CIN", "CLE")
