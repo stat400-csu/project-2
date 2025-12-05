@@ -245,3 +245,7 @@ NFC_seedplacement
 References
 
 HFA Data
+Nfelo. (2021, December 20). A further exploration of home field advantage in the NFL. nfelo. https://www.nfeloapp.com/analysis/a-further-exploration-of-home-field-advantage-in-the-nfl/ 
+
+Instead of reusing the factors used in nfeloapp, we incorporated elevation, crowd, and home record as those are more indicative factors in home-field advantages. Home record was weighted by 30% for historical performance and 70% for the past two seasons since recent performance is more accurate to a teams performance. We found these factors to be stronger indicators for HFA since the some factors provided by nfeloapp like “home bye” and “away bye” doesn’t happen every week and elevation and crowd has a direct contribution to performance of the visiting team giving the home team a better advantage. . Instead of multiplying the base by the percentage adjustments we directly solved for point advantage factor and added them to the HFA base of 2 for the “2 point home field advantage rule”. 
+
