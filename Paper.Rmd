@@ -168,13 +168,13 @@ head(conference)
 
 #wins for testing (remove when finalizing)
 wins <- c(
-  # AFC
+  #AFC
   BAL = 13, PIT = 11, CIN = 7, CLE = 6,
   NE  = 8,  BUF = 10, MIA = 9, NYJ = 6,
   JAX = 9,  IND = 7,  HOU = 12, TEN = 5,
   KC  = 13, LAC = 8,  DEN = 9, LV  = 7,
   
-  # NFC
+  #NFC
   CHI = 4,  GB  = 7,  DET = 12, MIN = 6,
   PHI = 11, DAL = 10, WAS = 5,  NYG = 4,
   TB  = 9,  CAR = 4,  ATL = 10, NO  = 8,
@@ -233,11 +233,11 @@ NFC_seedplacement
 #Tie breaker clauses add
 #Record <- Head to Head <- Division <- Conference <- Strength of Victory <- Strength of Schedule
 
-# Playoff Seed
+#Playoff Seed
 #AFC & NFC 1 seed First round bye
-## 2 plays 7, 3 plays 6, 4 plays 5 
-### HFA applies to higher seed (lower number)
-#### Super Bowl ELO DIF
+##2 plays 7, 3 plays 6, 4 plays 5 
+###HFA applies to higher seed (lower number)
+####Super Bowl ELO DIF
 
 '''
 
