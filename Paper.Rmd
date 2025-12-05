@@ -5,27 +5,6 @@ output:
   pdf_document: default
   html_document: default
 ---
-
-I've been using this as a testing ground, as getting test data has started to require code from multiple files.
-```{r elo_start}
-library(tidyverse)
-
-standings_odds <- read_csv("2024_standings_2025_odds(in).csv")
-
-hfa_data <- read_csv("NFL-HomeFieldAdvantage-Data.csv")
-
-weights <- c(0.4, 0.6)
-mean_elo <- 1000
-scale <- 50
-
-team_data <- standings_odds |>
-  arrange(Tm) |>
-  rename(Team_Name = Tm) |>
-  mutate(Weighted_ProjW = weights[1] * W + weights[2] * ProjW) |>
-  mutate(Elo = (Weighted_ProjW - 8.5) * scale + mean_elo) |>
-  mutate(HFA = hfa_data$Total)
-```
-
 ```{r win_probability_calculator}
 get_opposite_index_of_value <- function(input_vector, target_index) {
   result <- which(input_vector == input_vector[target_index])
@@ -35,7 +14,10 @@ get_opposite_index_of_value <- function(input_vector, target_index) {
 calculate_win_probabilities <- function(team_names, home_teams, elo, hfa, S) {
   win_probabilities <- rep(0, length(team_names))
   for(team in 1:length(team_names)) {
-    if(team_names[team] == home_teams[team]) {
+    if (is.na(home_teams[team])) {
+      win_probabilities[team] <- NA
+    }
+    else if(team_names[team] == home_teams[team]) {
       away_team_index <- get_opposite_index_of_value(home_teams, team)
       exponent <- (-1*(elo[team] + hfa[team] - elo[away_team_index]))/S
       win_probabilities[team] <- 1/(1+10^exponent)
@@ -44,12 +26,6 @@ calculate_win_probabilities <- function(team_names, home_teams, elo, hfa, S) {
   }
   return(win_probabilities)
 }
-
-test_team_data <- team_data[1:2,] 
-test_team_data <- test_team_data |> 
-  mutate(Schedule = rep("Atlanta Falcons",2)) |> 
-  mutate(win_prob = calculate_win_probabilities(Team_Name, Schedule, Elo, HFA, 400))
-test_team_data
 ```
 
 ```{r game_simulator}
@@ -72,4 +48,67 @@ week_simulator <- function(team_names, home_teams, win_probabilities) {
 }
 
 test_team_data |> mutate(week_results = week_simulator(Team_Name, Schedule, win_prob))
+```
+
+```{r elo_updater}
+elo_updater <- function(win_probabilities, actual_results, elos, sensitivity) {
+  K <- sensitivity
+  for (team in 1:length(elos)) {
+    if (!is.na(win_probabilities[team])) {
+      elos[team] <- elos[team] + 
+        K * (actual_results[team] - win_probabilities[team])
+    }
+  }
+  return(elos)
+}
+```
+
+```{r schedule_loader}
+library(nflreadr)
+
+schedule_by_week <- function(week_num) {
+  schedule <- load_schedules(2025)
+  
+  away_teams <- schedule |>
+    select(week, away_team, home_team, result) |>
+    filter(week == week_num) |>
+    rename(team = away_team) |>
+    mutate(win = case_when(result < 0 ~ 1,
+                           result == 0 ~ 0.5,
+                           .default = 0)) |>
+    select(team, home_team, win)
+    
+  home_teams <- schedule |>
+    select(week, away_team, home_team, result) |>
+    filter(week == week_num) |>
+    mutate(team = home_team) |>
+    mutate(win = case_when(result > 0 ~ 1,
+                           result == 0 ~ 0.5,
+                           .default = 0))  |>
+    select(team, home_team, win)
+  
+  week_schedule <- bind_rows(away_teams, home_teams)
+  return(week_schedule)
+}
+```
+
+The schedule by week function takes NFL schedule data from the nflreadr package and takes the needed week number as an input, and outputs the week's schedule for each team with the home team for the scheduled game and if the team won, lost, tied, or did not play.
+
+
+```{r elo_start}
+standings_odds <- read_csv("2024_standings_2025_odds(in).csv")
+
+hfa_data <- read_csv("NFL-HomeFieldAdvantage-Data.csv")
+
+weights <- c(0.4, 0.6)
+mean_elo <- 1000
+scale <- 32
+
+team_data <- standings_odds |>
+  arrange(Tm) |>
+  rename(Team_Name = Tm) |>
+  mutate(Weighted_ProjW = weights[1] * W + weights[2] * ProjW) |>
+  mutate(Elo = (Weighted_ProjW - 8.5) * scale + mean_elo) |>
+  mutate(HFA = hfa_data$'Point Advantage') |>
+  select(TCode, Team_Name, Elo, HFA)
 ```
