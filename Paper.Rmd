@@ -5,67 +5,12 @@ output:
   pdf_document: default
   html_document: default
 ---
-```{r win_probability_calculator}
-get_opposite_index_of_value <- function(input_vector, target_index) {
-  result <- which(input_vector == input_vector[target_index])
-  return(result[result != target_index])
-}
-
-calculate_win_probabilities <- function(team_names, home_teams, elo, hfa, S) {
-  win_probabilities <- rep(0, length(team_names))
-  for(team in 1:length(team_names)) {
-    if (is.na(home_teams[team])) {
-      win_probabilities[team] <- NA
-    }
-    else if(team_names[team] == home_teams[team]) {
-      away_team_index <- get_opposite_index_of_value(home_teams, team)
-      exponent <- (-1*(elo[team] + hfa[team] - elo[away_team_index]))/S
-      win_probabilities[team] <- 1/(1+10^exponent)
-      win_probabilities[away_team_index] <- 1-win_probabilities[team]
-    }
-  }
-  return(win_probabilities)
-}
-```
-
-```{r game_simulator}
-week_simulator <- function(team_names, home_teams, win_probabilities) {
-  game_results <- rep(-1,length(team_names))
-  for(team in 1:length(team_names)) {
-    if(team_names[team] == home_teams[team]) {
-      u <- runif(1, min = 0, max = 1)
-      away_team_index <- get_opposite_index_of_value(home_teams, team)
-      if(u < win_probabilities[team]) {
-        game_results[team] <- 1
-        game_results[away_team_index] <- 0
-      } else {
-        game_results[team] <- 0
-        game_results[away_team_index] <- 1
-      }
-    }
-  }
-  return(game_results)
-}
-
-test_team_data |> mutate(week_results = week_simulator(Team_Name, Schedule, win_prob))
-```
-
-```{r elo_updater}
-elo_updater <- function(win_probabilities, actual_results, elos, sensitivity) {
-  K <- sensitivity
-  for (team in 1:length(elos)) {
-    if (!is.na(win_probabilities[team])) {
-      elos[team] <- elos[team] + 
-        K * (actual_results[team] - win_probabilities[team])
-    }
-  }
-  return(elos)
-}
+```{r libraries}
+library(tidyverse)
+library(nflreadr)
 ```
 
 ```{r schedule_loader}
-library(nflreadr)
-
 schedule_by_week <- function(week_num) {
   schedule <- load_schedules(2025)
   
@@ -91,6 +36,63 @@ schedule_by_week <- function(week_num) {
   return(week_schedule)
 }
 ```
+
+```{r win_probability_calculator}
+get_opposite_index_of_value <- function(input_vector, target_index) {
+  result <- which(input_vector == input_vector[target_index])
+  return(result[result != target_index])
+}
+
+calculate_win_probabilities <- function(team_names, home_teams, elo, hfa, S) {
+  win_probabilities <- rep(0, length(team_names))
+  for(team in 1:length(team_names)) {
+    if (is.na(home_teams[team])) {
+      win_probabilities[team] <- NA
+    }
+    else if(team_names[team] == home_teams[team]) {
+      away_team_index <- get_opposite_index_of_value(home_teams, team)
+      exponent <- (-1*(elo[team] + hfa[team] - elo[away_team_index]))/S
+      win_probabilities[team] <- 1/(1+10^exponent)
+      win_probabilities[away_team_index] <- 1-win_probabilities[team]
+    }
+  }
+  return(win_probabilities)
+}
+```
+
+```{r week_simulator}
+week_simulator <- function(team_names, home_teams, win_probabilities) {
+  game_results <- rep(-1,length(team_names))
+  for(team in 1:length(team_names)) {
+    if(team_names[team] == home_teams[team]) {
+      u <- runif(1, min = 0, max = 1)
+      away_team_index <- get_opposite_index_of_value(home_teams, team)
+      if(u < win_probabilities[team]) {
+        game_results[team] <- 1
+        game_results[away_team_index] <- 0
+      } else {
+        game_results[team] <- 0
+        game_results[away_team_index] <- 1
+      }
+    }
+  }
+  return(game_results)
+}
+```
+
+```{r elo_updater}
+elo_updater <- function(win_probabilities, actual_results, elos, sensitivity) {
+  K <- sensitivity
+  for (team in 1:length(elos)) {
+    if (!is.na(win_probabilities[team])) {
+      elos[team] <- elos[team] + 
+        K * (actual_results[team] - win_probabilities[team])
+    }
+  }
+  return(elos)
+}
+```
+
 
 The schedule by week function takes NFL schedule data from the nflreadr package and takes the needed week number as an input, and outputs the week's schedule for each team with the home team for the scheduled game and if the team won, lost, tied, or did not play.
 
