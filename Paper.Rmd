@@ -92,6 +92,12 @@ week_simulator <- function(team_names, home_teams, win_probabilities) {
 }
 ```
 
+Once we have the results from the simulated games, we update the elo of each team according to the results.
+The formula for the change is as follows: $elo'=elo+K*(results - P_{team})$.
+Where P_team is the win probability for that team.
+K is the sensitivity scalar.
+Football Sensei does not include what he uses for his sensitivity scalar on his website, so we had free range to choose whatever scale we wanted.
+We ended up choosing K=32.
 ```{r elo_updater}
 elo_updater <- function(win_probabilities, actual_results, elos, sensitivity) {
   K <- sensitivity
