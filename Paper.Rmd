@@ -260,9 +260,8 @@ NFC_seedplacement
 ###HFA applies to higher seed (lower number)
 ####Super Bowl ELO DIF
 
-
 ```
-
+The playoffseed takes the wins from the simulated season and grabs the division leaders and wildcard spots and sorts them by wins and tiebreakers. After that these positions will be run through the weeksimulator again to get to the simulated super bowl and finally simulate the superbowl.
 
 References
 
