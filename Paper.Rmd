@@ -37,6 +37,14 @@ schedule_by_week <- function(week_num) {
 }
 ```
 
+To calculate the win probabilities for each home team, we used the following formula: 
+$P_{home} = \frac{1}{1+10^{-\frac{E_{home}+HFA+E_{away}}{S}}}$
+Where $E_home$ is the elo of the home team and $E_{away}$ is the elo of the away team. 
+HFA is the home field advantage. 
+In football sensei's paper, he has a hard-coded value of 55 elo, but we changed the formula to be a variable that is different for each team.
+S is a scaling parameter. It can be whatever we want in theory, but we kept the football sensei's value of 400.
+
+The away team's win probability is $1-P_{home}$.
 ```{r win_probability_calculator}
 get_opposite_index_of_value <- function(input_vector, target_index) {
   result <- which(input_vector == input_vector[target_index])
@@ -60,6 +68,10 @@ calculate_win_probabilities <- function(team_names, home_teams, elo, hfa, S) {
 }
 ```
 
+After getting the win probabilities of all teams, we simulate a week's worth of games (aka 1 game per team that does not have a bye). 
+We generate a Unif(0,1) random variable to simulate the outcome of a game.
+If the result is less that $P_{home}$, the home team wins.
+Otherwise, the away team wins.
 ```{r week_simulator}
 week_simulator <- function(team_names, home_teams, win_probabilities) {
   game_results <- rep(-1,length(team_names))
