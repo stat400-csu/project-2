@@ -224,8 +224,9 @@ conference <- list(
 )
 ```
 
+
 ```{r playoffseed}
-nsims <- 10
+nsims <- 100000
 division_standings <- function(division_name, team_names, sim_wins_df) {
   df <- sim_wins_df[sim_wins_df$TCode %in% team_names, ]
   df$division <- division_name
@@ -296,10 +297,14 @@ playoff_probabilities <- playoff_counts / nsims
 playoff_probabilities
 
 
+
 ### ---- SAVE AS CSV ----
 
 write.csv(results, "playoff_sims_100k.csv", row.names = FALSE)
 ```
+
+
+
 The playoffseed takes the wins from the simulated season and grabs the division leaders and wildcard spots and sorts them by wins and tiebreakers. After that these positions will be run through the weeksimulator again to get to the simulated super bowl and finally simulate the superbowl.
 
 References
