@@ -2,7 +2,6 @@
 title: "Simulating NFL Playoff Chances"
 author: "Noah Sturgeon, Chase Bishop, Carter Nault"
 output:
-  pdf_document: default
   html_document: default
 ---
 ```{r libraries}
@@ -183,6 +182,24 @@ season_sim <- function() {
 
 ```
 
+```{r}
+last_week <- 13
+actual_wins <- sapply(team_data$TCode, function(team) {
+  sum(sapply(1:last_week, function(wk) {
+    sched <- schedule_by_week(wk)
+    row <- sched[sched$team == team, ]
+    if(nrow(row) == 0) return(0)
+    sum(row$win)
+  }))
+})
+names(actual_wins) <- team_data$TCode
+
+sim_wins <- season_sim()
+
+sim_wins$total_wins <- sim_wins$wins + actual_wins[sim_wins$TCode]
+
+
+```
 
 
 ```{r}
@@ -208,78 +225,66 @@ conference <- list(
 ```
 
 ```{r playoffseed}
-
 nsims <- 10
-
-simulate_once <- function() {
-  sim_wins <- season_sim()
-
 division_standings <- function(division_name, team_names, sim_wins_df) {
-  
   df <- sim_wins_df[sim_wins_df$TCode %in% team_names, ]
-
   df$division <- division_name
-  
-
-  df <- df[order(-df$wins), ]
+  df <- df[order(-df$total_wins), ]
   rownames(df) <- NULL
-  
   return(df)
 }
 
 
-all_standings <- lapply(names(divisions), function(div) {
-  division_standings(div, divisions[[div]], sim_wins)
-})
+simulate_once <- function() {
+  sim_wins <- season_sim()
 
-names(all_standings) <- names(divisions)
+  sim_wins$total_wins <- sim_wins$wins + actual_wins[sim_wins$TCode]
 
+  all_standings <- lapply(names(divisions), function(div) {
+    division_standings(div, divisions[[div]], sim_wins)
+  })
+  names(all_standings) <- names(divisions)
 
+  division_winners <- sapply(all_standings, function(df) df$TCode[1])
 
-division_winners <- sapply(all_standings, function(df) df$TCode[1])
+  AFC_divwinners <- division_winners[grepl("AFC", names(division_winners))]
+  NFC_divwinners <- division_winners[grepl("NFC", names(division_winners))]
 
-AFC_divwinners <- division_winners[grepl("AFC", names(division_winners))]
-NFC_divwinners <- division_winners[grepl("NFC", names(division_winners))]
+  AFC_nondiv <- setdiff(conference$AFC, AFC_divwinners)
+  NFC_nondiv <- setdiff(conference$NFC, NFC_divwinners)
 
+  AFC_wildcard_df <- sim_wins[sim_wins$TCode %in% AFC_nondiv, ]
+  AFC_wildcard_df <- AFC_wildcard_df[order(-AFC_wildcard_df$total_wins), ][1:3, ]
 
-AFC_nondiv <- setdiff(conference$AFC, AFC_divwinners)
-NFC_nondiv <- setdiff(conference$NFC, NFC_divwinners)
+  NFC_wildcard_df <- sim_wins[sim_wins$TCode %in% NFC_nondiv, ]
+  NFC_wildcard_df <- NFC_wildcard_df[order(-NFC_wildcard_df$total_wins), ][1:3, ]
 
+  seed_placement <- function(winner_teams, wildcard_df, sim_wins_df) {
+    all_teams <- c(winner_teams, wildcard_df$TCode)
+    out <- sim_wins_df[sim_wins_df$TCode %in% all_teams, ]
+    out <- out[order(-out$total_wins), ]
+    rownames(out) <- NULL
+    return(out)
+  }
 
-AFC_wildcard_df <- sim_wins[sim_wins$TCode %in% AFC_nondiv, ]
-AFC_wildcard_df <- AFC_wildcard_df[order(-AFC_wildcard_df$wins), ][1:3, ]
+  AFC_seeds <- seed_placement(AFC_divwinners, AFC_wildcard_df, sim_wins)
+  NFC_seeds <- seed_placement(NFC_divwinners, NFC_wildcard_df, sim_wins)
 
-NFC_wildcard_df <- sim_wins[sim_wins$TCode %in% NFC_nondiv, ]
-NFC_wildcard_df <- NFC_wildcard_df[order(-NFC_wildcard_df$wins), ][1:3, ]
-
-
-
-seed_placement <- function(winner_teams, wildcard_df, sim_wins_df) {
-  
-  all_teams <- c(winner_teams, wildcard_df$TCode)
-  
-  out <- sim_wins_df[sim_wins_df$TCode %in% all_teams, ]
-  
-  out <- out[order(-out$wins), ]
-  rownames(out) <- NULL
-  
-  return(out)
+  return(
+    data.frame(
+      conference = c(rep("AFC", 7), rep("NFC", 7)),
+      seed = rep(1:7, 2),
+      team = c(AFC_seeds$TCode, NFC_seeds$TCode)
+    ) |>
+    dplyr::left_join(
+      sim_wins |> dplyr::select(TCode, total_wins),
+      by = c("team" = "TCode")
+    )
+  )
 }
 
-AFC_seeds <- seed_placement(AFC_divwinners, AFC_wildcard_df, sim_wins)
-NFC_seeds <- seed_placement(NFC_divwinners, NFC_wildcard_df, sim_wins)
-
-
- return(data.frame(
-    conference = c(rep("AFC", 7), rep("NFC", 7)),
-    seed = rep(1:7, 2),
-    team = c(AFC_seeds$TCode, NFC_seeds$TCode)
-  ))
-}
-# Run all simulations
 results <- do.call(rbind, replicate(nsims, simulate_once(), simplify = FALSE))
 
-# Count playoff appearances
 playoff_counts <- setNames(rep(0, length(team_data$TCode)), team_data$TCode)
 
 for (i in 1:nsims) {
@@ -288,8 +293,9 @@ for (i in 1:nsims) {
 }
 
 playoff_probabilities <- playoff_counts / nsims
-
 playoff_probabilities
+
+
 ### ---- SAVE AS CSV ----
 
 write.csv(results, "playoff_sims_100k.csv", row.names = FALSE)
