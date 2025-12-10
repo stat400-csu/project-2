@@ -211,7 +211,7 @@ AFC_West  <- c("KC", "LAC", "DEN", "LV")
 NFC_North <- c("CHI", "GB", "DET", "MIN")
 NFC_East  <- c("PHI", "DAL", "WAS", "NYG")
 NFC_South <- c("TB", "CAR", "ATL", "NO")
-NFC_West  <- c("LAR", "SEA", "SF", "ARI")
+NFC_West  <- c("LA", "SEA", "SF", "ARI")
 
 divisions <- list(
   AFC_North = AFC_North, AFC_East = AFC_East, AFC_South = AFC_South, AFC_West = AFC_West,
