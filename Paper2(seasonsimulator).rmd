@@ -225,7 +225,7 @@ conference <- list(
 ```
 
 
-```{r playoffseed}
+```{r playoffseed, eval = FALSE}
 nsims <- 100000
 division_standings <- function(division_name, team_names, sim_wins_df) {
   df <- sim_wins_df[sim_wins_df$TCode %in% team_names, ]
