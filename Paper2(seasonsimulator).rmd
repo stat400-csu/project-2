@@ -174,6 +174,8 @@ season_sim <- function() {
 
 ```
 
+Each unplayed week is iterated over and simulated, and each unplayed game is simulated as Bernoulli trial where p is the calculated win probability of the home team. If a randomly generated number is less than this value, a loss for the home team is simulated. Otherwise, a win is simulated.
+
 ```{r}
 last_week <- 13
 actual_wins <- sapply(team_data$TCode, function(team) {
