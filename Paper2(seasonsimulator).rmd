@@ -2,6 +2,7 @@
 title: "Simulating NFL Playoff Chances"
 author: "Noah Sturgeon, Chase Bishop, Carter Nault"
 output:
+  pdf_document: default
   html_document: default
 ---
 
@@ -45,8 +46,10 @@ schedule_by_week <- function(week_num) {
 ```
 
 To calculate the win probabilities for each home team, we used the following formula: 
+
 $P_{home} = \frac{1}{1+10^{-\frac{E_{home}+HFA+E_{away}}{S}}}$
-Where $E_home$ is the Elo of the home team and $E_{away}$ is the Elo of the away team. HFA is the home field advantage for the home team. In football sensei's paper, he has a hard-coded value of 55 Elo for the home field advantage, but we changed the formula to be a variable that is different for each team. S is a scaling parameter. It can be set to whatever we want in theory, but we kept the football sensei's value of 400.
+
+Where $E_home$ is the Elo of the home team and $E_{away}$ is the Elo of the away team. HFA is the home field advantage for the home team. In Football Sensei's paper, he has a hard-coded value of 55 Elo for the home field advantage, but we changed the formula to be a variable that is different for each team. S is a scaling parameter. It can be set to whatever we want in theory, but we kept the Football Sensei's value of 400.
 
 The away team's win probability is $1-P_{home}$.
 ```{r win_probability_calculator}
@@ -72,12 +75,11 @@ calculate_win_probabilities <- function(team_names, home_teams, elo, hfa, S) {
 }
 ```
 
-Once we have the results from the simulated games, we update the elo of each team according to the results.
-The formula for the change is as follows: $elo'=elo+K*(results - P_{team})$.
-Where P_team is the win probability for that team.
-K is the sensitivity scalar.
-Football Sensei does not include what he uses for his sensitivity scalar on his website, so we had free range to choose whatever scale we wanted.
-We ended up choosing K=32.
+Once we have the results from the simulated games, we update the Elo of each team according to the results. The formula for the change is as follows:
+
+$Elo'=Elo+K*(Results - P_{team})$.
+
+Where $P_{team}$ is the win probability for that team. K is the sensitivity scalar. Football Sensei does not include what he uses for his sensitivity scalar on his website, so we had free range to choose whatever scale we wanted. We ended up choosing K=32.
 ```{r elo_updater}
 elo_updater <- function(win_probabilities, actual_results, elos, sensitivity) {
   K <- sensitivity
@@ -91,9 +93,7 @@ elo_updater <- function(win_probabilities, actual_results, elos, sensitivity) {
 }
 ```
 
-
 The schedule by week function takes NFL schedule data from the nflreadr package and takes the needed week number as an input, and outputs the week's schedule for each team with the home team for the scheduled game and if the team won, lost, tied, or did not play.
-
 
 ```{r elo_start}
 standings_odds <- read_csv("2024_standings_2025_odds(in).csv")
@@ -128,7 +128,8 @@ for (week in 1:last_week) {
 }
 ```
 
-Using the week schedule, win probability and elo updater functions, the Elo of each team is updated for each week that has already been played in the season, which was up until week 13.
+Using the win probability and Elo updater functions, the Elo of each team is updated for each week that has already been played in the season, which was up until week 13.
+
 ```{r}
 season_sim <- function() {
   current_week <- 14
@@ -282,8 +283,6 @@ playoff_probabilities
 
 write.csv(results, "playoff_sims_100k.csv", row.names = FALSE)
 ```
-
-
 
 The playoffseed takes the wins from the simulated season and grabs the division leaders and wildcard spots and sorts them by wins and tiebreakers. After that these positions will be run through the weeksimulator again to get to the simulated super bowl and finally simulate the superbowl.
 
