@@ -74,30 +74,6 @@ calculate_win_probabilities <- function(team_names, home_teams, elo, hfa, S) {
 }
 ```
 
-After getting the win probabilities of all teams, we simulate a week's worth of games (aka 1 game per team that does not have a bye). 
-We generate a Unif(0,1) random variable to simulate the outcome of a game.
-If the result is less that $P_{home}$, the home team wins.
-Otherwise, the away team wins.
-```{r week_simulator}
-week_simulator <- function(team_names, home_teams, win_probabilities) {
-  game_results <- rep(-1,length(team_names))
-  for(team in 1:length(team_names)) {
-    if(team_names[team] == home_teams[team]) {
-      u <- runif(1, min = 0, max = 1)
-      away_team_index <- get_opposite_index_of_value(home_teams, team)
-      if(u < win_probabilities[team]) {
-        game_results[team] <- 1
-        game_results[away_team_index] <- 0
-      } else {
-        game_results[team] <- 0
-        game_results[away_team_index] <- 1
-      }
-    }
-  }
-  return(game_results)
-}
-```
-
 Once we have the results from the simulated games, we update the elo of each team according to the results.
 The formula for the change is as follows: $elo'=elo+K*(results - P_{team})$.
 Where P_team is the win probability for that team.
