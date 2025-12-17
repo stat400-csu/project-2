@@ -286,7 +286,7 @@ playoff_probabilities
 write.csv(results, "playoff_sims_100k.csv", row.names = FALSE)
 ```
 
-The playoffseed takes the wins from the simulated season and grabs the division leaders and wildcard spots and sorts them by wins and tiebreakers. After that these positions will be run through the weeksimulator again to get to the simulated super bowl and finally simulate the superbowl.
+The playoffseed takes the wins from the simulated seasons, the number of simulations, and grabs the division leaders and wildcard spots and sorts them by wins and adds them to a count and after that it takes the count of playoff appearences and divides it by the number of simulations, 100,000, to get the playoff probability.
 
 ```{r Playoff prob table}
 
@@ -316,17 +316,7 @@ PlayoffProb
 
 
 ```
-
-
-HFA 
-
-Instead of reusing the factors used in nfeloapp, we incorporated elevation, crowd, and home record as those are stronger factors in home-field advantages. Home record was weighted by 30% for historical performance and 70% for the past two seasons since recent performance is more accurate to a teams current home performance. 
-
-For Crowd Impact the factors that played into that was (Average attendance - League Average attendance)/Std where finding the difference between average attendance to the league average tells us how much larger or smaller the crowd is compared to the league average and dividing by the standard deviation to scale the raw attendance to crowd point advantage. 
-
-For Elevation we did ((Stadium Elevation - NFL Average Elevation)/1000 *0.7) where dividing by 1000 to scale down to a point advantage and then multiplying by 0.7 to a elevation point advantage.
-
-We found these factors to be stronger indicators for HFA since the some factors provided by nfeloapp like “home bye” and “away bye” doesn’t happen every week or "division scaling" since division games are useful indicators but doesn't apply to every game or "turf type" since every team has a lot of experience with both types and isn't as impactful as in the past. Elevation and Crowd has a direct contribution to performance of the visiting team giving the home team a better advantage. Instead of multiplying the base by the percentage adjustments we directly solved for point advantage factor and added them to the HFA base of 2 for the “2 point home field advantage rule”. 
+Sorts the playoff probability into AFC and NFC and positions the probability from highest to lowest.
 
 References
 
