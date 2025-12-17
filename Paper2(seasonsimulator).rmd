@@ -61,7 +61,7 @@ For crowd impact the factors that played into that was $\frac{Average \; Attenda
 
 For elevation we used the formula $\frac{Stadium \; Elevation \; - \; NFL \; Average \; Elevation}{1000 \; * \; 0.7}$, dividing by 1000 to scale down to a point advantage and then multiplying by 0.7 to a elevation point advantage.
 
-Some factors provided by nfeloapp aren't useful, like “home bye” and “away bye” which doesn't happen every week, "division scaling" since division games are useful indicators but don't apply to every game, and "turf type" since every team has a lot of experience with both types and what type of turf is used didn't have much of an impact as in the past. Elevation and Crowd Impact, on the other hand, has a direct contribution to performance of the visiting team giving the home team a better advantage. Instead of multiplying the base by the percentage adjustments we directly solved for point advantage factor and added them to the HFA base of 2 for the “2 point home field advantage rule”.
+Some factors provided by nfeloapp aren't useful, like “home bye” and “away bye” which doesn't happen every week, "division scaling" since division games are useful indicators but don't apply to every game, and "turf type" since every team has a lot of experience with both types and what type of turf is used didn't have much of an impact as in the past. Elevation and Crowd Impact, on the other hand, has a direct contribution to performance of the visiting team giving the home team a better advantage. Instead of adjusting the home advantage by percentages which was outlined in NFeloapp, we converted each factor into a direct numerical point advantage and added them together  We started with a baseline value of 2 points, which represents the average advantage of playing at home that is commonly referenced by NFL analysts and vegas betting lines.
 
 
 ```{r win_probability_calculator}
@@ -218,7 +218,7 @@ conference <- list(
 ```
 
 
-```{r playoffseed, eval = FALSE}
+```{r playoffseed}
 nsims <- 100000
 division_standings <- function(division_name, team_names, sim_wins_df) {
   df <- sim_wins_df[sim_wins_df$TCode %in% team_names, ]
@@ -275,9 +275,19 @@ simulate_once <- function() {
     )
   )
 }
+```
+
+```{r simulation, eval = FALSE}
 
 results <- do.call(rbind, replicate(nsims, simulate_once(), simplify = FALSE))
 
+### ---- SAVE AS CSV ----
+write.csv(results, "playoff_sims_100k.csv", row.names = FALSE)
+```
+
+```{r playoff_counts}
+
+results <- read.csv("playoff_sims_100k.csv")
 playoff_counts <- setNames(rep(0, length(team_data$TCode)), team_data$TCode)
 
 for (i in 1:nsims) {
@@ -288,11 +298,6 @@ for (i in 1:nsims) {
 playoff_probabilities <- playoff_counts / nsims
 playoff_probabilities
 
-
-
-### ---- SAVE AS CSV ----
-
-write.csv(results, "playoff_sims_100k.csv", row.names = FALSE)
 ```
 
 To get the playoff seeds, we take the wins from the simulated seasons, and use them to get the division leaders and wildcard spots for each season. Then, we take the count of times each team made the playoffs during all of the simulated seasons, and divide by the number of simulations, 100,000, to get the playoff probability.
@@ -322,13 +327,11 @@ rownames(PlayoffProb) <- NULL
 
 PlayoffProb
 
-
-
 ```
 
 This table shows the playoff probability, sorted into AFC and NFC, and sorts the probability from highest to lowest.
 
-```{r hfa_comp, eval = F}
+```{r hfa_comp}
 constant_hfa <- 2
 team_data$HFA <- rep(constant_hfa, 32)
 nsims <- 1000
