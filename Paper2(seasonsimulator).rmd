@@ -318,6 +318,28 @@ PlayoffProb
 ```
 Sorts the playoff probability into AFC and NFC and positions the probability from highest to lowest.
 
+```{r hfa_comp, eval = F}
+constant_hfa <- 2
+team_data$HFA <- rep(constant_hfa, 32)
+nsims <- 1000
+
+results <- do.call(rbind, replicate(nsims, simulate_once(), simplify = FALSE))
+
+playoff_counts <- setNames(rep(0, length(team_data$TCode)), team_data$TCode)
+
+for (i in 1:nsims) {
+  playoffteams <- results$team[(1 + (i - 1) * 14):(i * 14)]
+  playoff_counts[playoffteams] <- playoff_counts[playoffteams] + 1
+}
+
+playoff_probabilities_const_hfa <- playoff_counts / nsims
+playoff_probabilities_const_hfa
+
+```
+
+The above table simulates a smaller number of games with home field advantage set to a constant 2. Results are very similar to the simulation with variable home field advantage, because of how far into the season the simulations take place. However, the variable HFA is better able to pick up on the nuances in the NFL schedule. For example, the Chiefs probability is slightly increased in the variable HFA, because of how much higher their HFA is over the constant and because they play several home games against high leverage opponents during the simulation (Texans, Chargers, and Broncos). We believe that variable HFA is a useful addition because of this.
+
+
 References
 
 Ho T, Carl S (2025). nflreadr: Download 'nflverse' Data. R package version 1.5.0.9000, https://nflreadr.nflverse.com.
