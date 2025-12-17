@@ -18,6 +18,8 @@ library(nflreadr)
 set.seed(400)
 ```
 
+To get the schedule data needed for whatever week we are simulating, we take NFL schedule data from the nflreadr package and turn it into a dataframe that has the week's schedule for each team with the home team for the scheduled game and if the team won, lost, tied, or did not play.
+
 ```{r schedule_loader}
 schedule_by_week <- function(week_num) {
   schedule <- load_schedules(2025)
@@ -92,8 +94,6 @@ elo_updater <- function(win_probabilities, actual_results, elos, sensitivity) {
   return(elos)
 }
 ```
-
-The schedule by week function takes NFL schedule data from the nflreadr package and takes the needed week number as an input, and outputs the week's schedule for each team with the home team for the scheduled game and if the team won, lost, tied, or did not play.
 
 ```{r elo_start}
 standings_odds <- read_csv("2024_standings_2025_odds(in).csv")
