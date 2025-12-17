@@ -288,6 +288,35 @@ write.csv(results, "playoff_sims_100k.csv", row.names = FALSE)
 
 The playoffseed takes the wins from the simulated season and grabs the division leaders and wildcard spots and sorts them by wins and tiebreakers. After that these positions will be run through the weeksimulator again to get to the simulated super bowl and finally simulate the superbowl.
 
+```{r Playoff prob table}
+
+playoff_df <- data.frame(
+  team = names(playoff_probabilities),
+  playoff_prob = playoff_probabilities,
+  stringsAsFactors = FALSE
+) %>%
+  mutate(conference = ifelse(team %in% conference$AFC, "AFC", "NFC")) %>%
+  arrange(conference, desc(playoff_prob))
+
+AFC_probs <- playoff_df %>%
+  filter(conference == "AFC") %>%
+  select(AFC_team = team, AFC_prob = playoff_prob)
+
+NFC_probs <- playoff_df %>%
+  filter(conference == "NFC") %>%
+  select(NFC_team = team, NFC_prob = playoff_prob)
+
+PlayoffProb <- cbind(AFC_probs, NFC_probs)
+
+rownames(PlayoffProb) <- NULL
+
+
+PlayoffProb
+
+
+
+```
+
 References
 
 Ho T, Carl S (2025). nflreadr: Download 'nflverse' Data. R package version 1.5.0.9000, https://nflreadr.nflverse.com.
