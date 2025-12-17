@@ -9,6 +9,7 @@ output:
 
 Each team in the National Football League plays 17 games, and teams that either win their division or win enough games to be placed in the wild card are sent to the postseason. Teams that win early in the season are more likely to reach the postseason, and so our goal is to estimate playoff probabilities of each team through an incomplete season of the NFL, specifically through week 13 of the current 2025 season. We accomplished this by simulating results of each unplayed game in the season with a calculated win probability for the home team in each game. This project is a recreation of the simulations done by Football Sensei, with the major difference being that our calculated win probability uses Elo and a variable home field advantage, while their calculated win probability uses Elo and a constant home field advantage.
 
+For the sake of this paper, Elo is a numerical system that attempts to quantify a contestant's skill level in competitive games with 1v1 matches. The Elo system accomplishes this in two steps. First, each contestant is given a starting number. Then, played game data is used to iteratively update the Elo system. Each team will gain an amount of points for winning each game, and lose an amount of points for losing each game. The exact formula used is up to the implementer, and will be discussed further on in this paper.
 
 ```{r libraries}
 library(tidyverse)
