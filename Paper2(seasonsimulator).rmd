@@ -4,6 +4,12 @@ author: "Noah Sturgeon, Chase Bishop, Carter Nault"
 output:
   html_document: default
 ---
+
+## Project Introduction
+
+Each team in the National Football League plays 17 games, and teams that either win their division or win enough games to be placed in the wild card are sent to the postseason. Teams that win early in the season are more likely to reach the postseason, and so our goal is to estimate playoff probabilities of each team through an incomplete season of the NFL, specifically through week 13 of the current 2025 season. We accomplished this by simulating results of each unplayed game in the season with a calculated win probability for the home team in each game. This project is a recreation of the simulations done by Football Sensei, with the major difference being that our calculated win probability uses Elo and a variable home field advantage, while their calculated win probability uses Elo and a constant home field advantage.
+
+
 ```{r libraries}
 library(tidyverse)
 library(nflreadr)
