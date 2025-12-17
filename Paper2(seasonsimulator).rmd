@@ -46,10 +46,7 @@ schedule_by_week <- function(week_num) {
 
 To calculate the win probabilities for each home team, we used the following formula: 
 $P_{home} = \frac{1}{1+10^{-\frac{E_{home}+HFA+E_{away}}{S}}}$
-Where $E_home$ is the elo of the home team and $E_{away}$ is the elo of the away team. 
-HFA is the home field advantage. 
-In football sensei's paper, he has a hard-coded value of 55 elo, but we changed the formula to be a variable that is different for each team.
-S is a scaling parameter. It can be whatever we want in theory, but we kept the football sensei's value of 400.
+Where $E_home$ is the Elo of the home team and $E_{away}$ is the Elo of the away team. HFA is the home field advantage for the home team. In football sensei's paper, he has a hard-coded value of 55 Elo for the home field advantage, but we changed the formula to be a variable that is different for each team. S is a scaling parameter. It can be set to whatever we want in theory, but we kept the football sensei's value of 400.
 
 The away team's win probability is $1-P_{home}$.
 ```{r win_probability_calculator}
