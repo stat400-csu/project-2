@@ -183,7 +183,6 @@ sim_wins <- season_sim()
 
 sim_wins$total_wins <- sim_wins$wins + actual_wins[sim_wins$TCode]
 
-
 ```
 
 
@@ -219,7 +218,6 @@ division_standings <- function(division_name, team_names, sim_wins_df) {
   rownames(df) <- NULL
   return(df)
 }
-
 
 simulate_once <- function() {
   sim_wins <- season_sim()
@@ -292,5 +290,10 @@ The playoffseed takes the wins from the simulated season and grabs the division 
 
 References
 
-HFA Data
-Nfelo. (2021, December 20). A further exploration of home field advantage in the NFL. nfelo. https://www.nfeloapp.com/analysis/a-further-exploration-of-home-field-advantage-in-the-nfl/ 
+Ho T, Carl S (2025). nflreadr: Download 'nflverse' Data. R package version 1.5.0.9000, https://nflreadr.nflverse.com.
+
+Nfelo. (2021, December 20). A further exploration of home field advantage in the NFL. nfelo. https://www.nfeloapp.com/analysis/a-further-exploration-of-home-field-advantage-in-the-nfl/
+
+Methodology: How football sensei calculates NFL odds. Methodology | How Football Sensei Calculates NFL Odds. (2025). https://footballsensei.com/methodology
+
+Pro Football Stats, history, scores, standings, playoffs, Schedule & Records. Pro. (n.d.). https://www.pro-football-reference.com/ 
