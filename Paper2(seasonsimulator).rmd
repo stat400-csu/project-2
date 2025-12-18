@@ -12,7 +12,7 @@ Each team in the National Football League plays 17 games, and teams that either 
 
 For the sake of this paper, Elo is a numerical system that attempts to quantify a contestant's skill level in competitive games with 1v1 matches. The Elo system accomplishes this in two steps. First, each contestant is given a starting number. Then, played game data is used to iteratively update the Elo system. Each team will gain an amount of points for winning each game, and lose an amount of points for losing each game. The exact formula used is up to the implementer, and will be discussed further on in this paper.
 
-```{r libraries}
+```{r libraries, message=FALSE}
 library(tidyverse)
 library(nflreadr)
 set.seed(400)
@@ -106,7 +106,7 @@ elo_updater <- function(win_probabilities, actual_results, elos, sensitivity) {
 }
 ```
 
-```{r elo_start}
+```{r elo_start, message=FALSE}
 standings_odds <- read_csv("2024_standings_2025_odds(in).csv")
 
 hfa_data <- read_csv("NFL-HomeFieldAdvantage-Data.csv")
@@ -126,14 +126,18 @@ team_data <- standings_odds |>
 
 Each team has a starting Elo which is a weighted average of last year's standings and the Vegas over-under line for wins from the preseason. Slightly more weight was placed on the over-under line to account for the changes in coaching and roster that an NFL team undergoes over the offseason, which would be considered in the preseason betting lines.
 
-```{r elo_up_to_sim_start}
+```{r elo_up_to_sim_start, message=FALSE}
 last_week <- 13
 
 for (week in 1:last_week) {
   current_week_schedule <- schedule_by_week(week)
   current_week_schedule <- rename(current_week_schedule, TCode = team)
   sched_w_elo <- left_join(team_data, current_week_schedule)
-  sched_w_elo$WP <- calculate_win_probabilities(sched_w_elo$TCode, sched_w_elo$home_team, sched_w_elo$Elo, sched_w_elo$HFA, 400)
+  sched_w_elo$WP <- calculate_win_probabilities(sched_w_elo$TCode, 
+                                                sched_w_elo$home_team, 
+                                                sched_w_elo$Elo, 
+                                                sched_w_elo$HFA, 
+                                                400)
   sched_w_elo$Elo <- elo_updater(sched_w_elo$WP, sched_w_elo$win, sched_w_elo$Elo, scale)
   team_data$Elo <- sched_w_elo$Elo
 }
@@ -155,16 +159,24 @@ season_sim <- function() {
     schedule <- schedule_by_week(week) |>
       rename(TCode = team)
     schedule <- left_join(schedule, team_data, by = join_by(TCode))
-    schedule$WP <- calculate_win_probabilities(schedule$TCode, schedule$home_team, schedule$Elo, schedule$HFA, 400)
-    for (i in 1:length(unique(schedule$home_team))) { #Have to simulate for each game which is half the number of teams on the schedule
+    schedule$WP <- calculate_win_probabilities(schedule$TCode, 
+                                               schedule$home_team, 
+                                               schedule$Elo, 
+                                               schedule$HFA, 
+                                               400)
+    for (i in 1:length(unique(schedule$home_team))) { 
+      #Have to simulate for each game 
+      # which is half the number of teams on the schedule
       u <- runif(1)
       if (u < schedule$WP[i]) {
         #TCode (away team) wins
-        sim_wins[sim_wins$TCode == schedule$TCode[i], "wins"] <- sim_wins[sim_wins$TCode == schedule$TCode[i], "wins"] + 1
+        sim_wins[sim_wins$TCode == schedule$TCode[i], "wins"] <- 
+          sim_wins[sim_wins$TCode == schedule$TCode[i], "wins"] + 1
       }
       else {
         #home team wins
-        sim_wins[sim_wins$TCode == schedule$home_team[i], "wins"] <- sim_wins[sim_wins$TCode == schedule$home_team[i], "wins"] + 1
+        sim_wins[sim_wins$TCode == schedule$home_team[i], "wins"] <- 
+          sim_wins[sim_wins$TCode == schedule$home_team[i], "wins"] + 1
       }
     }
   }
@@ -207,8 +219,14 @@ NFC_South <- c("TB", "CAR", "ATL", "NO")
 NFC_West  <- c("LA", "SEA", "SF", "ARI")
 
 divisions <- list(
-  AFC_North = AFC_North, AFC_East = AFC_East, AFC_South = AFC_South, AFC_West = AFC_West,
-  NFC_North = NFC_North, NFC_East = NFC_East, NFC_South = NFC_South, NFC_West = NFC_West
+  AFC_North = AFC_North, 
+  AFC_East = AFC_East, 
+  AFC_South = AFC_South, 
+  AFC_West = AFC_West,
+  NFC_North = NFC_North, 
+  NFC_East = NFC_East, 
+  NFC_South = NFC_South, 
+  NFC_West = NFC_West
 )
 
 conference <- list(
@@ -247,10 +265,12 @@ simulate_once <- function() {
   NFC_nondiv <- setdiff(conference$NFC, NFC_divwinners)
 
   AFC_wildcard_df <- sim_wins[sim_wins$TCode %in% AFC_nondiv, ]
-  AFC_wildcard_df <- AFC_wildcard_df[order(-AFC_wildcard_df$total_wins), ][1:3, ]
+  AFC_wildcard_df <- 
+    AFC_wildcard_df[order(-AFC_wildcard_df$total_wins), ][1:3, ]
 
   NFC_wildcard_df <- sim_wins[sim_wins$TCode %in% NFC_nondiv, ]
-  NFC_wildcard_df <- NFC_wildcard_df[order(-NFC_wildcard_df$total_wins), ][1:3, ]
+  NFC_wildcard_df <- 
+    NFC_wildcard_df[order(-NFC_wildcard_df$total_wins), ][1:3, ]
 
   seed_placement <- function(winner_teams, wildcard_df, sim_wins_df) {
     all_teams <- c(winner_teams, wildcard_df$TCode)
